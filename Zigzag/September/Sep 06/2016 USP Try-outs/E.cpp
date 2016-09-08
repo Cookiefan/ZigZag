@@ -58,7 +58,6 @@ string travel()
 	{
 		int x=q.front().first;
 		int xst=q.front().second;
-		//cout<<x<<' '<<xst<<' '<<e[x][xst]<<' '<<pre[x][xst].first<<' '<<pre[x][xst].second<<endl;
 		if (xst==(1<<n)-1)
 		{
 			pii tmp=q.front();
@@ -103,15 +102,6 @@ int main()
 		else bad[now]=1;
 	}
 	build();
-	// for (int w=0;w<10;w++)
-	// 	cout<<(char)('a'+w)<<' ';
-	// cout<<endl;
-	// for (int i=0;i<=num;i++)
-	// {
-	// 	for (int w=0;w<10;w++)
-	// 		cout<<ch[i][w]<<' ';
-	// 	cout<<good[i]<<' '<<bad[i]<<endl;
-	// }
 	cout<<travel()<<endl;
 	return 0;
 }

@@ -5,6 +5,8 @@
 using namespace std;
 
 int dis[maxn], vis[maxn];
+double sum;
+const double eps=1e-6;
 
 int n,m,p;
 //堆DJ
@@ -36,7 +38,7 @@ void add_edge(int x, int y, int z)
 
 int dij(int st, int ed)
 {
-	for (int i=1;i<=n+1;i++) dis[i]=inf;
+	for (int i=1;i<=n;i++) dis[i]=inf;
 	memset(vis,0,sizeof(vis));
 	while (!q.empty()) q.pop();
 	q.push(node(st,0));
@@ -68,11 +70,6 @@ int main()
 		scanf("%d%d%d",&n,&m,&p);
 		memset(fir,0,sizeof(fir));
 		tot=0;
-		for (int i=1;i<=n;i++)
-		{
-			add_edge(i, n+1, n*p);
-			add_edge(n+1, i, 0);
-		}
 		int x, y, z;
 		for (int i=1;i<=m;i++)
 		{
@@ -80,7 +77,22 @@ int main()
 			add_edge(x,y,z);
 			add_edge(y,x,z);
 		}
-		printf("%.6f\n",(double)dij(1, n));
+		dij(n, 1);
+		double l=0, r=(double)n*n*p, ans=0;
+		while (r-l>=eps)
+		{
+			double mid=(l+r)*0.5, tmp=0;
+			for (int i=1;i<=n;i++)
+				tmp+=min((double)dis[i], (double)p+mid/n);
+			if (mid-tmp>=eps)
+			{
+				r=mid;
+				ans=mid;
+			}
+			else
+				l=mid;
+		}
+		printf("%.5f\n",min((double)dis[1], ans/n+p));
 	}
 	return 0;
 }
