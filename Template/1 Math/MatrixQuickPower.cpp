@@ -2,7 +2,7 @@
 const int ms=5;
 struct matrix
 {
-	llg e[ms][ms];
+	LL e[ms][ms];
 	matrix()
 	{
 		memset(e,0,sizeof(e));
@@ -25,7 +25,7 @@ struct matrix
 					(c.e[i][j]+=a.e[i][k]*b.e[k][j]%oo)%=oo;
 		return c;
 	}
-	friend matrix operator ^(matrix e, llg k)
+	friend matrix operator ^(matrix e, LL k)
 	{
 		matrix tmp=matrix(1);
 		while (k)
