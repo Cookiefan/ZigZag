@@ -7,13 +7,25 @@ const LL oo=1e9+7;
 LL f[maxn], s[maxn];
 map<int, LL> g;
 
-LL inv(LL x)
+LL exp(LL a, LL b, LL p)
 {
-	if (x==1) return 1;
-	else return (oo-oo/x)*inv(oo%x)%oo;
+	a%=p;
+	LL tmp=1;
+	while (b)
+	{
+		if (b&1) tmp=(tmp*a)%p;
+		a=a*a%p;
+		b=b/2;
+	}
+	return tmp;
 }
 
-const int ms=4;
+LL inv(LL x)
+{
+	return exp(x, oo-2, oo);
+}
+
+const int ms=2;
 struct matrix
 {
 	LL e[ms][ms];
@@ -54,57 +66,56 @@ struct matrix
 
 int fibo(int x)
 {
-	if (x==1) return 1;
 	matrix S, T;
-	S.e[0][0]=3; S.e[0][1]=4;
+	S.e[0][0]=1; S.e[0][1]=3;
 	T.e[0][0]=0; T.e[0][1]=1;
 	T.e[1][0]=1; T.e[1][1]=1;
-	if (x>2)
+	if (x>1)
 	{
-		T=T^(x-2);
+		T=T^(x-1);
 		S=S*T;
 	}
 	return S.e[0][0];
 }
 
-int dp(int x)
+int phi(int x)
 {
-	if (g.count(x)) return g[x];
-	LL tmp=(fibo(x)-1+x)%oo;
-	//cout<<0<<' '<<fibo(x)<<endl;
+	LL cnt=x;
 	for (int i=2;i*i<=x;i++)
 		if (x%i==0)
 		{
-			(tmp+=(fibo(i)-1+oo)%oo)%=oo;
-			if (x/i!=i)
-				(tmp+=(fibo(x/i)-1+oo)%oo)%=oo;
+			cnt=cnt*inv(i)%oo*(i-1)%oo;
+			while (x%i==0) x=(LL)x*inv(i)%oo;
 		}
-	tmp=tmp*inv(x)%oo;
-	return g[x]=tmp;
-}
-
-LL gcd(LL a,LL b)
-{
-    return (b==0?a:gcd(b, a%b));
+	if (x>1) cnt=cnt*inv(x)%oo*(x-1)%oo;
+	return cnt;
 }
 
 
 int main()
 {
-	for (int i=1;i<=20;i++) 
-	{
-		int tmp=0;
-		for (int j=1;j<=i;j++)
-			tmp+=fibo(gcd(i, j));
-		tmp=tmp/i;
-		cout<<i<<' '<<tmp<<endl;
-	}
-	g[1]=2;
-	//for (int i=1;i<=100000;i++) dp(i);
+	// for (int i=1;i<=2000;i++) 
+	// {
+	// 	int tmp=0;
+	// 	for (int j=1;j<=i;j++)
+	// 		(tmp+=fibo(gcd(i, j)))%=oo;
+	// 	tmp=tmp*inv(i)%oo;
+	// 	cout<<i<<' '<<tmp<<endl;
+	// }
 	int n;
 	while (scanf("%d",&n)!=EOF)
 	{
-		printf("%d\n",dp(n));
+		int i=n;
+		LL tmp=0;
+		for (int j=1;j*j<=i;j++)
+			if (i%j==0)
+			{
+				(tmp+=(LL)fibo(j)*phi(i/j)%oo)%=oo;
+				if (i/j!=j) (tmp+=(LL)fibo(i/j)*phi(j)%oo)%=oo;
+			}
+		tmp=tmp*inv(i)%oo;
+		if (n==1) tmp=2;
+		cout<<tmp<<endl;
 	}
 	return 0;
 }

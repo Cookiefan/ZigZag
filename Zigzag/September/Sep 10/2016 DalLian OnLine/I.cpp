@@ -5,8 +5,9 @@ inline void rd(T &x) { char c = getchar(); x = 0;while(!isdigit(c)) c = getchar(
 while(isdigit(c)) { x = x * 10 + c - '0'; c = getchar(); }}
 template <class T> void Out(T a) { if(a < 0){putchar('-');a = -a;}if(a >= 10)Out(a / 10);putchar(a % 10 + '0');  }
 using namespace std;
-const int N=200500;
+const int N=250500;
 queue <int> q[3];
+map<int,int> ma[N];
 int dis[N],head[N],sum[N],in[N];
 int l;
 int n,m,s;
@@ -40,19 +41,24 @@ void Pre()
     while (!q[0].empty()) q[0].pop();
 
     for (int i=1;i<=n;i++)
+    {
         q[1].push(i);
+        ma[i].clear();
+    }
     sum[0]=1;
 }
 
 void Dfs(int fl,int now)
 {
     int a,b,tmp,x,y;
+    if (sum[now]==0) return ;
     a=fl;b=fl^1;
     dis[s]=0;
     while (!q[a].empty())
     {
         tmp=0;
         x=q[a].front();
+//        cout<<x<<endl;
         q[a].pop();
         if (x==s) continue;
         for (int i=head[x];i;i=edge[i].next)
@@ -64,7 +70,7 @@ void Dfs(int fl,int now)
 //        cout<<x<<' '<<tmp<<' '<<sum[now]<<endl;
         if (tmp==sum[now])
         {
-            if (in[x]!=n-1) q[b].push(x);
+            q[b].push(x);
         }
         else
         {
@@ -87,28 +93,21 @@ int main()
         for (int i=1;i<=m;i++)
         {
             scanf("%d%d",&x,&y);
-            in[x]++;
-            in[y]++;
+            if (!ma[x].count(y) && !ma[y].count(x)) {in[x]++;ma[x][y]=t+1;ma[y][x]=t+1;in[y]++;}
             Addedge(x,y);
         }
 
         scanf("%d",&s);
 
-        if (in[s]==n-1)
-        {
-            for (int i=1;i<=n;i++)
-            {
-                if (i!=s) printf("%d\n",dis[i]);
-            }
-            continue ;
-        }
-
         Dfs(1,0);
 
         for (int i=1;i<=n;i++)
         {
-            if (i!=s) printf("%d\n",dis[i]);
+            if (i==s) continue;
+            if (i!=s) printf("%d",dis[i]);
+            if (i!=n) printf(" ");
         }
+        cout<<endl;
     }
     return 0;
 }
