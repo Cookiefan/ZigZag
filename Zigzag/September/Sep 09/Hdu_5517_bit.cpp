@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
-#define maxn 100
+#define maxn 1020
 using namespace std;
-
+typedef long long LL;
 struct bit
 {
 	int sum[maxn][maxn];
@@ -14,30 +14,31 @@ struct bit
 		memset(sum,0,sizeof(sum));
 	}
 	void add(int x, int y, int z){
-		for (int i=x;i<=nx;i+=(i&-i))
-			for (int j=y;j<=ny;j+=(j&-j))
+		for (int i=x;i>=1;i-=(i&-i))
+			for (int j=y;j>=1;j-=(j&-j))
 				sum[i][j]+=z;
 	}
 	int ask(int x, int y){
 		int tmp=0;
-		for (int i=x;i>=1;i-=(i&-i))
-			for (int j=y;j>=1;j-=(j&-j))
+		for (int i=x;i<=nx;i+=(i&-i))
+			for (int j=y;j<=ny;j+=(j&-j))
 				tmp+=sum[i][j];
 		return tmp;
 	}
 };
 
-int vy[maxn*100];
+int vy[maxn*100], sy[maxn*100];
 struct tii
 {
 	int x, y, z;
 	tii(){}
 	tii(int x, int y, int z):x(x), y(y), z(z){}
 	friend bool operator <(tii a, tii b){
-		return a.x>b.x;
+		return a.x==b.x?a.y==b.y?a.z>b.z:a.y>b.y:a.x>b.x;
 	};
 };
-vector<tii> C;
+map<tii, LL> C;
+
 
 int n,m;
 
@@ -54,23 +55,32 @@ int main()
 		for (int i=1;i<=n;i++)
 		{
 			scanf("%d%d",&x,&y);
-			vy[y]=max(vy[y], x);
+			if (x>vy[y])
+			{
+				vy[y]=x;
+				sy[y]=1;
+			}
+			else if (x==vy[y])
+				sy[y]++;
 		}
-		for (int i=1;i<=n;i++)
+		for (int i=1;i<=m;i++)
 		{
 			scanf("%d%d%d",&x,&y,&z);
-			C.push_back(tii(vy[z], x, y));
+			tii tmp=tii(vy[z], x, y);
+			if (!C.count(tmp)) C[tmp]=0;
+			C[tmp]+=sy[z];
 		}
-		sort(C.begin(), C.end());
-		bit S(50, 50);
-		int ans=0;
-		for (tii e:C)
+		// for (auto e:C)
+		// 	cout<<e.first.x<<' '<<e.first.y<<' '<<e.first.z<<' '<<e.second<<endl;
+		bit S(1020, 1020);
+		LL ans=0;
+		for (auto e:C)
 		{
-			if (S.ask(e.y, e.z)==0)
-				ans++;
-			S.add(e.y, e.z, 1);
+			if (S.ask(e.first.y, e.first.z)==0)
+				ans+=e.second;
+			S.add(e.first.y, e.first.z, 1);
 		}
-		printf("Case #%d: %d\n", o, ans);
+		printf("Case #%d: %I64d\n", o, ans);
 	}
 	
 	return 0;
