@@ -1,38 +1,34 @@
-//AC自动机
-void insert(int w)
-{
-    if (!ch[now][w]) ch[now][w]=++num;
-    fa[ch[now][w]]=now;
-    now=ch[now][w];
-}
+int ch[maxn][27], v[maxn];
+int fail[maxn];
+int rot, num, now, n;
+char s[maxn];
 
-void add(int x,int y)
+void ins(int w)
 {
-    e[++tot].s=x; e[tot].t=y; e[tot].next=fir[x]; fir[x]=tot;
+    if (ch[now][w]==-1) ch[now][w]=++num;
+    now=ch[now][w];
 }
 
 void build()
 {
-    int head=0,tail=1;
-    q[1]=rot;
-    while (head<tail)
+    queue<int> q;
+    memset(fail,0,sizeof(fail));
+    for (int w=0;w<26;w++)
+        if (ch[rot][w]==-1)
+            ch[0][w]=rot;
+        else
+            q.push(ch[0][w]);
+    while (!q.empty())
     {
-        int p=q[++head];
+        int x=q.front(); q.pop();
         for (int w=0;w<26;w++)
-            if (ch[p][w])
+            if (ch[x][w]==-1)
+                ch[x][w]=ch[fail[x]][w];
+            else
             {
-                int tmp=ch[p][w];
-                int j=p;
-                if (j==rot) fail[tmp]=rot;
-                else
-                {
-                    j=fail[j];
-                    while (j&&ch[j][w]==0) j=fail[j];
-                    if (ch[j][w]) fail[tmp]=ch[j][w];
-                    else fail[tmp]=rot;
-                }
-                add(fail[tmp],tmp);
-                q[++tail]=tmp;
+                int y=ch[x][w];
+                fail[y]=ch[fail[x]][w];
+                q.push(y);
             }
     }
 }
