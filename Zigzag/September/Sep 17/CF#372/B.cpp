@@ -124,7 +124,7 @@ int main()
 		}
 
 		for (int j:tmp) p[j].z=1;
-		if (tmp.size()>0) p[tmp[0]].z+=(len-ans2);
+		if (tmp.size()>0) p[tmp[tmp.size()-1]].z+=(len-ans2);
 
 		for (int i=1;i<=m;i++)
 			if (p[i].z==0)
