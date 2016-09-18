@@ -77,7 +77,7 @@ int main()
 	scanf("%d%d%d%d%d",&n,&m,&len,&st,&ed);
 	int x, y, z;
 	memset(fir,0,sizeof(fir));
-	tot=0;
+	tot=1;
 	for (int i=1;i<=m;i++)
 	{
 		scanf("%d%d%d",&x,&y,&z);
@@ -104,31 +104,45 @@ int main()
 
 	dij(ed, 1);
 	vector<int> tmp;
-	tmp.clear();
+	
 	if (ans1>=len && ans2<=len)
 	{
-		x=st;
-		while (x!=ed)
-		{
-			for (int j=fir[x];j;j=e[j].next)
+		do{
+			tmp.clear();
+			x=st;
+			while (x!=ed)
 			{
-				y=e[j].t;
-				if (dis[0][x]+e[j].val+dis[1][y]==dis[0][ed])
+				for (int j=fir[x];j;j=e[j].next)
 				{
-					x=y;
-					if (e[j].flag!=0)
-						tmp.push_back(e[j].flag);
-					break;
+					y=e[j].t;
+					if (dis[0][x]+e[j].val+dis[1][y]==dis[0][ed])
+					{
+						x=y;
+						if (e[j].flag!=0)
+							tmp.push_back(j);
+						break;
+					}
 				}
 			}
-		}
 
-		for (int j:tmp) p[j].z=1;
-		if (tmp.size()>0) p[tmp[tmp.size()-1]].z+=(len-ans2);
+			for (int j:tmp) p[e[j].flag].z=1;
+			if (tmp.size()>0)
+			{
+				e[tmp[0]].val+=(len-dis[0][ed]);
+				e[tmp[0]^1].val+=(len-dis[0][ed]);
+				p[e[tmp[0]].flag].z+=(len-dis[0][ed]);
+			}
+			for (int i=1;i<=tot;i++)
+				if (p[e[i].flag].z==0)
+				{
+					e[i].val=inf;
+					e[i^1].val=inf;
+					p[e[i].flag].z=inf;
+				}
+			dij(st, 0);
+			dij(ed, 1);
+		}while (dis[0][ed]<len);
 
-		for (int i=1;i<=m;i++)
-			if (p[i].z==0)
-				p[i].z=inf;
 
 		printf("YES\n");
 		for (int i=1;i<=m;i++)
