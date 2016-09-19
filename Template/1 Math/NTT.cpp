@@ -50,7 +50,7 @@ inline void ntt(LL *a, int n, int flag)
 	}
 }
 
-inline void convolution(LL *a, LL *b, LL *c, int n, int m)
+inline void roll(LL *a, LL *b, LL *c, int n, int m)
 {
 	int num=1;
 	while (num<n+m) num<<=1;

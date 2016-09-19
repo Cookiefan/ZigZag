@@ -61,6 +61,7 @@ void fft(cpx *a, int n, int flag)
 
 cpx A[maxn], B[maxn];
 int a[maxn];
+int dp[maxn], s[maxn], t[maxn], tmp[maxn];
 int n;
 void roll(int *a, int *b, int *c, int n, int m)
 {
@@ -73,4 +74,32 @@ void roll(int *a, int *b, int *c, int n, int m)
 	for (int i=0;i<num;i++) A[i]=A[i]*B[i];
 	fft(A, num, -1);
 	for (int i=0;i<num;i++) c[i]=(LL)(A[i].x+0.5)%mod;
+}
+
+void solve(int l, int r)
+{
+	if (l==r) return ;
+	int mid=(l+r)>>1;
+	solve(l, mid);
+	for (int i=0;i<mid-l+1;i++)
+		s[i]=dp[l+i];
+	for (int i=0;i<r-l+1;i++)
+		t[i]=a[i+1];
+	roll(s, t, tmp, mid-l+1, r-l+1);
+	for (int i=mid+1;i<=r;i++)
+		(dp[i]+=tmp[i-l-1])%=mod;
+	solve(mid+1, r);
+}
+
+int main()
+{
+	while (scanf("%d",&n)&&n!=0)
+	{
+		for (int i=1;i<=n;i++) scanf("%d",&a[i]), a[i]%=mod;
+		memset(dp,0,sizeof(dp));
+		for (int i=1;i<=n;i++) dp[i]=a[i];
+		solve(1, n);
+		printf("%d\n",dp[n]);
+	}
+	return 0;
 }

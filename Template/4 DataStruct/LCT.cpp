@@ -70,14 +70,16 @@ void splay(int x)
 	update(x);
 }
 
-void access(int x)
+int access(int x)
 {
-	for (int y=0; x; y=x, x=fa[x])
+	int y=0;
+	for (; x; y=x, x=fa[x])
 	{
 		splay(x);
 		c[x][1]=y;
 		update(x);
 	}
+	return y;
 }
 
 int root(int x)
@@ -110,4 +112,14 @@ void cut(int x, int y)
 {
 	split(y, x);
 	c[y][0]=fa[x]=0;
+}
+
+void solve(int x, int y, int z)
+{
+	access(x);
+	int lca=access(y);
+	splay(x);
+	change(c[lca][1], z);
+	key[lca]=z;
+	if (x!=lca) change(x, z);
 }
