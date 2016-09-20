@@ -95,7 +95,7 @@ void make_root(int x)
 	reverse(x);
 }
 
-void split(int x, int y)
+void split(int x, int y)//x is root
 {
 	make_root(y);
 	access(x);
