@@ -74,3 +74,8 @@ inline void roll(LL *a, LL *b, LL *c, int n, int m)
 // 		(f[i]+=a[i-l-1])%=mod;
 // 	solve(mid+1, k-1);
 // }
+
+int g = 2;
+while (exp(g, (MOD - 1) / 2, MOD) == 1 || exp(g, (MOD - 1) / 479, MOD) == 1) {
+    g ++;
+}
