@@ -22,9 +22,8 @@ inline int rev(int x, int n)
 }
 inline void ntt(LL *a, int n, int flag)
 {
-	for (int i=0;i<n;i++)
-		if (i<rev(i, n))
-			swap(a[rev(i, n)], a[i]);
+	for (int i=0,j=i;i<n;i++,j=rev(i, n))
+		if (i<j) swap(a[i], a[j]);
 	for (int k=1;k<n;k<<=1)
 	{	
 		LL wn=exp(G, (mod-1)/(k<<1), mod), w=1;

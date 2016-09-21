@@ -35,9 +35,8 @@ int rev(int x, int n)
 
 void fft(cpx *a, int n, int flag)
 {
-	for (int i=0;i<n;i++)
-		if (i<rev(i, n))
-			swap(a[rev(i, n)], a[i]);
+	for (int i=0,j=i;i<n;i++,j=rev(i, n))
+		if (i<j) swap(a[i], a[j]);
 	for (int k=1;k<n;k<<=1)
 	{
 		cpx wn(cos(PI/k), flag*sin(PI/k));

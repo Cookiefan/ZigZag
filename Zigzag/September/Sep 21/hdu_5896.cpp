@@ -19,30 +19,6 @@ inline LL exp(LL a, LL b, LL p)
 	}
 	return tmp;
 }
-// void ntt(LL A[],int n,int inv) {
-//     // inv == 1 : ntt, == -1 : intt
-//     LL w = 1,d = exp(G,(mod - 1) / n,mod),t;
-//     int i,j,c,s;
-//     if (inv == -1) {
-//         for (i = 1,j = n - 1; i < j; ++ i,-- j)
-//             std::swap(A[i],A[j]);
-//         for (t = exp(n,mod - 2,mod),i = 0; i < n; ++ i)
-//             A[i] = A[i] * t % mod;
-//     }
-//     for (s = n >> 1; s; s >>= w = 1,d = d * d % mod) {
-//         for (c = 0; c < s; ++ c,w = w * d % mod) {
-//             for (i = c; i < n; i += s << 1) {
-//                 A[i | s] = (A[i] + mod - (t = A[i | s])) * w % mod;
-//                 A[i] = (A[i] + t) % mod;
-//             }
-//         }
-//     }
-//     for (i = 1; i < n; ++ i) {
-//         for (j = 0,s = i,c = n >> 1; c; c >>= 1,s >>= 1)
-//             j = j << 1 | s & 1;
-//         if (i < j) std::swap(A[i],A[j]);
-//     }
-// }
 inline int rev(int x, int n)
 {
     int tmp=0;
@@ -50,11 +26,11 @@ inline int rev(int x, int n)
         tmp=tmp<<1|x&1;
     return tmp;
 }
+
 inline void ntt(LL *a, int n, int flag)
 {
-	for (int i=0;i<n;i++)
-		if (i<rev(i, n))
-			swap(a[rev(i, n)], a[i]);
+	for (int i=0,j=i;i<n;i++,j=rev(i, n))
+		if (i<j) swap(a[i], a[j]);
 	for (int k=1;k<n;k<<=1)
 	{	
 		LL wn=exp(G, (mod-1)/(k<<1), mod), w=1;
