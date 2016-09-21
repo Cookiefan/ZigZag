@@ -15,33 +15,27 @@ inline LL exp(LL a, LL b, LL p)
 }
 inline int rev(int x, int n)
 {
-	int tmp=0;
-	for (int i=1;i<n;i<<=1)
-	{
-		tmp<<=1;
-		if (x & i) tmp |=1;
-	}
-	return tmp;
+    int tmp=0;
+    for (int i=n>>1;i;i>>=1,x>>=1)
+        tmp=tmp<<1|x&1;
+    return tmp;
 }
 inline void ntt(LL *a, int n, int flag)
 {
 	for (int i=0;i<n;i++)
 		if (i<rev(i, n))
 			swap(a[rev(i, n)], a[i]);
-	for (int i=1;i<n;i<<=1)
+	for (int k=1;k<n;k<<=1)
 	{	
-		LL wn=exp(G, (mod-1)/(i<<1), mod);
+		LL wn=exp(G, (mod-1)/(k<<1), mod), w=1;
 		if (flag==-1) wn=exp(wn, mod-2, mod);
-		for (int j=0;j<n;j+=(i<<1))
-		{
-			LL w=1;
-			for (int k=0;k<i;k++, w=w*wn%mod)
+		for (int i=0;i<k;i++,w=w*wn%mod)
+			for (int j=i;j<n;j+=(k<<1))
 			{
-				LL x=a[j+k], y=w*a[j+k+i]%mod;
-				a[j+k]=(x+y)%mod;
-				a[j+k+i]=(x-y+mod)%mod;
+				LL x=a[j], y=w*a[j|k]%mod;
+				a[j]=(x+y)%mod;
+				a[j|k]=(x-y+mod)%mod;
 			}
-		}
 	}
 	if (flag==-1)
 	{
@@ -61,3 +55,23 @@ inline void roll(LL *a, LL *b, LL *c, int n, int m)
 	for (int i=0;i<num;i++) c[i]=a[i]*b[i]%mod;
 	ntt(c, num, -1);
 }
+// merge
+// inline void solve(int l, int k)
+// {
+// 	if (k==0)
+// 	{
+// 		f[l]=f[l]*exp(l, mod-2, mod)%mod;
+// 		return ;
+// 	}
+// 	int r=l+(1<<k)-1, mid=(l+r)>>1;
+// 	solve(l, k-1);
+// 	memset(a, 0, sizeof(*a)<<k);
+// 	//cout<<k<<endl;
+// 	for (int i=l;i<=mid;i++) a[i-l]=f[i];
+// 	ntt(a, 1<<k, 1);
+// 	for (int i=0;i<1<<k;i++) (a[i]*=b[k][i])%=mod;
+// 	ntt(a, 1<<k, -1);
+// 	for (int i=mid+1;i<=r;i++)
+// 		(f[i]+=a[i-l-1])%=mod;
+// 	solve(mid+1, k-1);
+// }
