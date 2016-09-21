@@ -1,18 +1,21 @@
 #include <bits/stdc++.h>
 #define maxn 220
+#define inf 99999999
 using namespace std;
 
 vector<int> t[maxn];
 int vis[maxn];
 int bel[maxn], idg[maxn];
 typedef pair<int,int> pii;
-pii f[maxn],a[maxn], b[maxn];
+pii f[maxn],a[maxn];
+vector<pii>b;
 int n, st;
 
 void dfs(int x, int cnt)
 {
 	vis[x]=1;
-	f[x]=a[x];
+	if (bel[x]==0) f[x]=a[x];
+	else f[x]=pii(inf, inf);
 	for (int y: t[x])
 	{
 		if (!vis[y]) dfs(y, cnt);
@@ -23,12 +26,21 @@ void dfs(int x, int cnt)
 		}
 		else
 		{
+			//cout<<y<<": "<<f[y].first<<' '<<f[y].second<<endl;
+			//cout<<x<<' '<<y<<' ';
 			if (f[y].second==cnt)
+			{
 				f[x]=f[y];
-			else if (f[y].first<f[x].first)
+				//cout<<1<<endl;
+			}
+			if (f[x].second!=cnt && f[y].first<f[x].first)
+			{
 				f[x]=f[y];
+				//cout<<2<<endl;
+			}
 		}
 	}
+	//cout<<x<<' '<<f[x].first<<' '<<f[x].second<<endl;
 }
 
 void solve(int x)
@@ -53,7 +65,7 @@ void solve(int x)
 
 bool cmp(pii a, pii b)
 {
-	return a.second>b.second;
+	return a.second<b.second;
 }
 
 int main()
@@ -65,11 +77,12 @@ int main()
 		scanf("%d",&n);
 		int num;
 		char c;
-		memset(a,0,sizeof(a));
-		memset(b,0,sizeof(b));
+		memset(bel,0,sizeof(bel));
 		memset(idg,0,sizeof(idg));
+		b.clear();
 		for (int i=1;i<=n;i++)
 		{ 
+			a[i]=pii(0,0);
 			t[i].clear();
 			scanf("%d",&num);
 			if (num!=0)
@@ -85,7 +98,10 @@ int main()
 				bel[i]=(c=='X');
 			}
 			else
+			{
 				scanf("%d%d",&a[i].first,&a[i].second);
+				b.push_back(a[i]);
+			}
 		}
 		for (int i=1;i<=n;i++)
 			if (!idg[i])
@@ -96,12 +112,12 @@ int main()
 
 		int ans1=f[st].second, ans2=0;
 
-		memcpy(b, a, sizeof(a));
-		sort(b+1, b+n+1, cmp);
-		for (int i=n;i>=1;i--)
+		sort(b.begin(), b.end(), cmp);
+		for (int i=b.size()-1;i>=0;i--)
 		{
 			memset(vis,0,sizeof(vis));
-			dfs(st, i);
+			dfs(st, b[i].second);
+			// cout<<f[st].first<<endl;
 			if (f[st].first==b[i].first)
 			{
 				ans2=b[i].second;
