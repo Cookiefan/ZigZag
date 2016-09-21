@@ -27,32 +27,28 @@ cpx operator *(cpx a, cpx b)
 
 int rev(int x, int n)
 {
-	int tmp=0;
-	for (int i=1;i<n;i<<=1)
-		if (x & i) tmp=tmp<<1|1;
-		else tmp=tmp<<1;
-	return tmp;
+    int tmp=0;
+    for (int i=n>>1;i;i>>=1,x>>=1)
+        tmp=tmp<<1|x&1;
+    return tmp;
 }
 
 void fft(cpx *a, int n, int flag)
 {
-	for (int i=0;i<n;i++)
-		if (i<rev(i, n))
-			swap(a[rev(i, n)], a[i]);
-	for (int i=1;i<n;i<<=1)
+	for (int i=0,j=i;i<n;i++,j=rev(i, n))
+		if (i<j) swap(a[i], a[j]);
+	for (int k=1;k<n;k<<=1)
 	{
-		cpx wn(cos(PI/i), flag*sin(PI/i));
+		cpx wn(cos(PI/k), flag*sin(PI/k));
 		//cpx wn(cosl(PI/i), flag*sinl(PI/i));
-		for (int j=0;j<n;j+=(i<<1))
-		{
-			cpx w(1, 0);
-			for (int k=0;k<i;k++, w=w*wn)
+		cpx w(1, 0);
+		for (int i=0;i<k;i++,w=w*wn)
+			for (int j=i;j<n;j+=(k<<1))
 			{
-				cpx x=a[j+k], y=w*a[j+k+i];
-				a[j+k]=x+y;
-				a[j+k+i]=x-y;
+				cpx x=a[j], y=w*a[j|k];
+				a[j]=x+y;
+				a[j|k]=x-y;
 			}
-		}
 	}
 	if (flag==-1) 
 		for (int i=0;i<n;i++)
