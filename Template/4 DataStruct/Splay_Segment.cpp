@@ -136,7 +136,7 @@ int main()
     scanf("%d %d",&n,&m);
     for (int i=2;i<=n+1;i++)
             scanf("%d",&a[i]);      
-    a[st=1]=0; a[ed=n+2]=0;
+    a[st=1]=0; a[ed=n+2]=0;// 开头和结尾添加空节点
     ra[0]=la[0]=ma[0]=-inf;
     rot=build(1,n+2);
     char sign[20];
@@ -158,6 +158,9 @@ int main()
         if (sign[0]=='D')
         {
             scanf("%d %d",&x,&y);
+            //询问区间[x..y]
+            //l=find(rot, x), r=find(rot, y+2);
+            //注意[x..y]是实际的区间位置
             l=find(rot,x);  r=find(rot,x+y+1);
             splay(r,rot); splay(l,c[rot][0]);
             del(c[l][1]);

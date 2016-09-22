@@ -56,7 +56,7 @@ void fft(cpx *a, int n, int flag)
 }
 
 cpx A[maxn], B[maxn];
-int a[maxn];
+int a[maxn], b[maxn], c[maxn];
 int n;
 void roll(int *a, int *b, int *c, int n, int m)
 {
