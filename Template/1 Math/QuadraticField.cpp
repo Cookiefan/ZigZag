@@ -1,3 +1,4 @@
+//二次域运算
 typedef long long LL;
 const LL w=5;
 const LL oo=1e9+7;

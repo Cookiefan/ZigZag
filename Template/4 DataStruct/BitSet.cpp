@@ -1,16 +1,3 @@
-#include <iostream>
-#include <cstdio>
-#include <algorithm>
-#include <cstring>
-#include <cmath>
-#include <vector>
-#include <bitset>
-#define inf 1000000007
-#define maxn 52000
-#define maxm 520
-
-using namespace std;
-
 struct score
 {
     int x,y;

@@ -1,4 +1,4 @@
-//矩阵乘法&快速幂
+//矩阵乘法&快速幂(ms<=500)
 const int ms=5;
 struct matrix
 {

@@ -1,12 +1,4 @@
 //三维偏序
-#include <iostream>
-#include <cstdio>
-#include <algorithm>
-#include <cmath>
-#include <cstring>
-#define maxn 200000
-#define inf 2147483647
-using namespace std;
 struct point{
     int x,y,z,s;
 }a[maxn],q1[maxn],q2[maxn];

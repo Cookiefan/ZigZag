@@ -1,12 +1,5 @@
 //莫队算法
-#include <iostream>
-#include <cstdio>
-#include <algorithm>
-#include <cmath>
-#include <cstring>
-#define maxn 55000
 #define inf 2147483647
-using namespace std;
 struct query
 {
     int l,r,s,w;

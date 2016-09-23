@@ -147,6 +147,8 @@ int main()
         if (sign[0]=='I')
         {
             scanf("%d %d",&x,&y);
+            //处理[x..y]区间，
+            //l=find(rot, x), r=find(rot, y+2)
             l=find(rot,x+1); r=find(rot,x+2);
             splay(r,rot); splay(l,c[rot][0]);
             for (int j=1;j<=y;j++) 

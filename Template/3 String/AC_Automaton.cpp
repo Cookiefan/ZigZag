@@ -1,3 +1,4 @@
+//AC自动机
 int ch[maxn][27], v[maxn];
 int fail[maxn];
 int rot, num, now, n;
