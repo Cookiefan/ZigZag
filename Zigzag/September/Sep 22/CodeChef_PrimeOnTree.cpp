@@ -4,16 +4,17 @@
 #include <cmath>
 #include <cstring>
 #include <vector>
-#define maxn 10020
+#define maxn 50020
 #define inf 999999999
 #define PI acos(-1.0)
 using namespace std;
 
-int np[maxn];
+int np[maxn*2];
 vector<int> prime;
 void get_prime(int n)
 {
 	memset(np,0,sizeof(np));
+	np[0]=np[1]=1;
 	prime.clear();
 	for (int i=2;i<=n;i++)
 	{
@@ -62,7 +63,6 @@ void fft(cpx *a, int n, int flag)
 	for (int k=1;k<n;k<<=1)
 	{
 		cpx wn(cos(PI/k), flag*sin(PI/k));
-		//cpx wn(cosl(PI/i), flag*sinl(PI/i));
 		cpx w(1, 0);
 		for (int i=0;i<k;i++,w=w*wn)
 			for (int j=i;j<n;j+=(k<<1))
@@ -77,7 +77,7 @@ void fft(cpx *a, int n, int flag)
 			a[i].x/=n, a[i].y/=n;
 }
 
-cpx A[maxn];
+cpx A[maxn*2];
 
 struct edge
 {
@@ -86,13 +86,13 @@ struct edge
 	edge(int t, int val):t(t),val(val){}
 };
 vector<edge> e[maxn];
-vector<int> q;
 
 int size[maxn], mx_size[maxn], dep[maxn], vis[maxn];
-int a[maxn*2], b[maxn*2];
-int n, rot, ans, cnt, m, num;
+LL a[maxn*2], b[maxn*2];
+int n, rot,  cnt, m, num;
+LL ans;
 
-void chose(int x, int fa, int num)
+void chose(int x, int fa, int sz)
 {
 	size[x]=1; mx_size[x]=0;
 	for (int j=0;j<e[x].size();j++)
@@ -100,25 +100,27 @@ void chose(int x, int fa, int num)
 		int y=e[x][j].t;
 		if (!vis[y] && y!=fa)
 		{
-			chose(y, x, num);
+			chose(y, x, sz);
 			size[x]+=size[y];
 			mx_size[x]=max(mx_size[x], size[y]);
 		}
 	}
-	mx_size[x]=max(mx_size[x], num-size[x]);
+	mx_size[x]=max(mx_size[x], sz-size[x]);
 	if (mx_size[x]<mx_size[rot]) rot=x;
 }
 
-int chose_rot(int x, int num)
+int chose_rot(int x, int sz)
 {
 	rot=0;
-	chose(x, 0, num);
+	chose(x, 0, sz);
 	return rot;
 }
 
+vector<int> q;
+
 void get_dep(int x, int fa)
 {
-	a[dep[x]]++;
+	q.push_back(dep[x]);
 	for (int j=0;j<e[x].size();j++)
 	{
 		int y=e[x][j].t;
@@ -130,25 +132,30 @@ void get_dep(int x, int fa)
 	}
 }
 
-int get_ans(int x, int h)
+LL get_ans(int x, int h)
 {
-	memset(a, 0, sizeof(*a)<<m);
 	dep[x]=h;
+	q.clear();
 	get_dep(x, 0);
-	cout<<"x: "<<x<<endl;
+	int mx=0;
+	for (int i=0;i<q.size();i++) mx=max(mx, q[i]);
+	num=1;
+	while (num<(mx<<1)+2) num<<=1;
+	for (int i=0;i<num;i++) a[i]=0;
+	for (int i=0;i<q.size();i++) a[q[i]]++;
+	//cout<<(h==0?"+":"-")<<"x: "<<x<<endl;
 	for (int i=0;i<num;i++) A[i]=cpx(a[i], 0);
 	fft(A, num, 1);
 	for (int i=0;i<num;i++) A[i]=A[i]*A[i];
 	fft(A, num, -1);
 	for (int i=0;i<num;i++)
-		if (i+i<num) b[i+i]=a[i];
-	for (int i=0;i<num;i++) cout<<(LL)(A[i].x+0.5)<<' '; cout<<endl;
-	for (int i=0;i<num;i++) cout<<b[i]<<' '; cout<<endl;
+		if ((i<<1)<num) b[i<<1]=a[i];
+	//for (int i=0;i<num;i++) cout<<(LL)(A[i].x+0.5)-b[i]<<' '; cout<<endl;
 	LL tmp=0;
 	for (int i=0;i<num;i++)
 		if (!np[i])
 			tmp+=(LL)(A[i].x+0.5)-b[i];
-	cout<<tmp<<endl;
+	//cout<<tmp<<endl;
 	return tmp;
 }
 
@@ -160,10 +167,13 @@ void solve(int x)
 	{
 		int y=e[x][j].t;
 		if (!vis[y])
-		{
 			ans-=get_ans(y, dep[y]);
+	}
+	for (int j=0;j<e[x].size();j++)
+	{
+		int y=e[x][j].t;
+		if (!vis[y])
 			solve(chose_rot(y, size[y]));
-		}
 	}
 }
 
@@ -175,13 +185,13 @@ void init()
 	mx_size[0]=inf;
 }
 
-
 int main()
 {
+	//freopen("A.in","r",stdin);
 	scanf("%d",&n);
-	get_prime(n);
 	num=1; m=0;
-	while (num<n) num<<=1,m++;
+	while (num<n+1) num<<=1;
+	get_prime(num);
 	int x,y,z;
 	init();
 	for (int i=1;i<n;i++)
@@ -191,7 +201,8 @@ int main()
 		e[y].push_back(edge(x,1));
 	}		
 	solve(chose_rot(1, n));
-	printf("%d\n",ans);
+	LL sum=(LL)n*(n-1);
+	printf("%.7f\n",ans*1.0/sum);
 	return 0;
 
 }
