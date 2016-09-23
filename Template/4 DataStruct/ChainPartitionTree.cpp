@@ -1,8 +1,4 @@
-#include <bits/stdc++.h>
-#define maxn 30020
-#define inf 999999999
-using namespace std;
-
+//树链剖分
 vector<int> t[maxn];
 int dep[maxn], pos[maxn], top[maxn], size[maxn], fa[maxn];
 int sum[6*maxn], mx[6*maxn];

@@ -28,6 +28,7 @@ void ins(int x,int y,int z)
 
 int query(int x,int y)
 {
-	int tmp=s.ask(y)*(y+1)-s.ask(x-1)*x-(t.ask(y)-t.ask(x-1));
+	int tmp=s.ask(y)*(y+1)-s.ask(x-1)*x
+		   -(t.ask(y)-t.ask(x-1));
 	return tmp;
 }

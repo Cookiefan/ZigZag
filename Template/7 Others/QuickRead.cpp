@@ -1,3 +1,4 @@
+//快速读(慎用!!!)
 const int BufferSize=1<<16;
 char buffer[BufferSize],*head,*tail;
 inline char Getchar() {

@@ -1,3 +1,4 @@
+//欧拉筛法
 void get_prime(int n)
 {
 	memset(np,0,sizeof(np));

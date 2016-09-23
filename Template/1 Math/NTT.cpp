@@ -1,3 +1,4 @@
+//NTT
 #define G 3
 typedef long long LL;
 const LL mod=998244353;
@@ -54,27 +55,27 @@ inline void roll(LL *a, LL *b, LL *c, int n, int m)
 	for (int i=0;i<num;i++) c[i]=a[i]*b[i]%mod;
 	ntt(c, num, -1);
 }
-// merge
-// inline void solve(int l, int k)
-// {
-// 	if (k==0)
-// 	{
-// 		f[l]=f[l]*exp(l, mod-2, mod)%mod;
-// 		return ;
-// 	}
-// 	int r=l+(1<<k)-1, mid=(l+r)>>1;
-// 	solve(l, k-1);
-// 	memset(a, 0, sizeof(*a)<<k);
-// 	//cout<<k<<endl;
-// 	for (int i=l;i<=mid;i++) a[i-l]=f[i];
-// 	ntt(a, 1<<k, 1);
-// 	for (int i=0;i<1<<k;i++) (a[i]*=b[k][i])%=mod;
-// 	ntt(a, 1<<k, -1);
-// 	for (int i=mid+1;i<=r;i++)
-// 		(f[i]+=a[i-l-1])%=mod;
-// 	solve(mid+1, k-1);
-// }
-
+merge
+inline void solve(int l, int k)
+{
+	if (k==0)
+	{
+		f[l]=f[l]*exp(l, mod-2, mod)%mod;
+		return ;
+	}
+	int r=l+(1<<k)-1, mid=(l+r)>>1;
+	solve(l, k-1);
+	memset(a, 0, sizeof(*a)<<k);
+	//cout<<k<<endl;
+	for (int i=l;i<=mid;i++) a[i-l]=f[i];
+	ntt(a, 1<<k, 1);
+	for (int i=0;i<1<<k;i++) (a[i]*=b[k][i])%=mod;
+	ntt(a, 1<<k, -1);
+	for (int i=mid+1;i<=r;i++)
+		(f[i]+=a[i-l-1])%=mod;
+	solve(mid+1, k-1);
+}
+//求原根(MOD=P * 2^k + 1)
 int g = 2;
 while (exp(g, (MOD - 1) / 2, MOD) == 1 || exp(g, (MOD - 1) / 479, MOD) == 1) {
     g ++;

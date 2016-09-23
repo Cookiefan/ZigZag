@@ -1,5 +1,4 @@
 //高斯消元
-
 void gauss(int n)
 {
     int k=1;

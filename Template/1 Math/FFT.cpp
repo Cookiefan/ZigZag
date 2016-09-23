@@ -1,8 +1,6 @@
-#include <bits/stdc++.h>
-#define maxn 400200
-#define mod 313
+//FFT
 #define PI acos(-1.0)//acosl(-1.0)
-using namespace std;
+
 typedef double LD;//long double
 typedef long long LL;
 //typedef complex<LD> cpx;

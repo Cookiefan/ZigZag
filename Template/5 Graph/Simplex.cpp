@@ -1,12 +1,4 @@
-#include <iostream>
-#include <cstdio>
-#include <algorithm>
-#include <cmath>
-#include <cstring>
-#define maxn 1010
-#define maxm 10010
-#define inf 2147483647
-using namespace std;
+//单纯形(复杂度不确定，慎用!!!)
 int a[maxn][maxm],next[maxm];
 int n,m;
 

@@ -1,3 +1,4 @@
+//位运算
 while(mask<(1<<n))
 {//枚举大小为i的集合
 	int x=mask&-mask,y=mask+x;

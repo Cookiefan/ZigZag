@@ -6,7 +6,8 @@ struct mx_bit
 	void cov(int x,int z)
 	{
 		key[x]=z;
-		for (int i=x;i<=num;i+=(i&-i)) mx[i]=max(mx[i],z);
+		for (int i=x;i<=num;i+=(i&-i))
+			mx[i]=max(mx[i],z);
 	}
 	int ask(int l,int r)
 	{
@@ -14,7 +15,8 @@ struct mx_bit
 		while (l<=r)
 		{
 			tmp=max(tmp,key[r]);
-			for (r-=1;r-(r&-r)>=l;r-=(r&-r)) tmp=max(tmp,mx[r]);
+			for (r-=1;r-(r&-r)>=l;r-=(r&-r))
+				tmp=max(tmp,mx[r]);
 		}
 		return tmp;
 	}

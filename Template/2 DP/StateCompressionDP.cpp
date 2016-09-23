@@ -1,11 +1,5 @@
-#include <iostream>
-#include <cstdio>
-#include <algorithm>
-#include <cstring>
-#include <cmath>
-#include <vector>
+//状压DP
 #define inf 1000000007
-#define oo 100000000
 #define maxn 11
 #define maxm 1050
 

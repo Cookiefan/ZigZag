@@ -1,4 +1,4 @@
-//spfa费用流(max)
+//spfa费用流(min)
 struct edge
 {
 	int s, t, val, cost, next;
@@ -19,7 +19,7 @@ void init()
 
 bool find_path()
 {
-	for (int i=st;i<=ed;i++) dis[i]=inf;
+	for (int i=st;i<=ed;i++) dis[i]=inf;//max
 	queue<int> q;
 	q.push(st);
 	dis[st]=0;
@@ -32,7 +32,7 @@ bool find_path()
 		for (int j=fir[x];j;j=e[j].next)
 		{
 			int y=e[j].t;
-			if (e[j].val && dis[y]>dis[x]+e[j].cost)
+			if (e[j].val && dis[y]>dis[x]+e[j].cost)//max
 			{
 				dis[y]=dis[x]+e[j].cost;
 				pre[y]=j;
@@ -40,7 +40,7 @@ bool find_path()
 			}
 		}
 	}
-	return dis[ed]<inf;
+	return dis[ed]<inf;//max
 }
 
 int fare_flow()
