@@ -11,7 +11,7 @@ int build(int z){
 }
 int merge(int x, int y){
 	if (!x || !y) return x+y;
-	if (v[x]<v[y]) swap(x, y);//bit rot
+	if (v[x]<v[y]) swap(x, y);//big rot
 	r[x]=merge(r[x], y);
 	if (dis[r[x]]>dis[l[x]]) swap(l[x], r[x]);
 	sz[x]=sz[l[x]]+sz[r[x]]+1;
