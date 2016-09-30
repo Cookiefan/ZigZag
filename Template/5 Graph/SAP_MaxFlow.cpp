@@ -36,6 +36,8 @@ int dfs(int x, int flow)
 
 int max_flow()
 {
+	memset(dis,0,sizeof(dis));
+	memset(gap,0,sizeof(gap));
 	gap[0]=num;
 	memcpy(last,fir,sizeof(fir));
 	int tmp=0;
@@ -48,6 +50,29 @@ void init()
 	st=0; ed=2*n+m+p+1; num=ed+1; tot=1;
 	memset(fir,0,sizeof(fir));
 	memset(last,0,sizeof(last));
-	memset(dis,0,sizeof(dis));
-	memset(gap,0,sizeof(gap));
 }
+/*
+input:
+2
+5 7
+1 3 3
+2 3 4
+2 4 3
+1 5 6
+4 5 3
+1 4 4
+3 4 2
+4 5
+6 7
+1 2 1
+2 3 6
+4 5 5
+5 6 3
+1 4 6
+2 5 5
+3 6 4
+1 6
+output:
+9
+6
+*/

@@ -3,7 +3,7 @@ struct et
 {
     int s,t,val,cost,next;
 }e[maxm];
-int fir[maxn],dis[maxn],v[maxn],q[maxm],pre[maxn];
+int fir[maxn],dis[maxn],vis[maxn],q[maxm],pre[maxn];
 bool inque[maxn];
 int n,m,st,ed,tot,ans;
 
@@ -35,11 +35,11 @@ int dfs(int now,int flow)
         ans+=dis[st]*flow;
         return flow;
     }
-    int sap=0;    v[now]=1;
+    int sap=0;    vis[now]=1;
     for (int j=fir[now];j;j=e[j].next)
     {
         int k=e[j].t;
-        if (!v[k]&&e[j].val&&dis[now]==dis[k]+e[j].cost)
+        if (!vis[k]&&e[j].val&&dis[now]==dis[k]+e[j].cost)
         {
             int tmp=dfs(k,min(e[j].val,flow-sap));
             e[j].val-=tmp;
@@ -54,14 +54,14 @@ int dfs(int now,int flow)
 bool adjust()
 {
     int tmp=-inf;
-    for (int i=st;i<=ed;i++) if (v[i])
+    for (int i=st;i<=ed;i++) if (vis[i])
         for (int j=fir[i];j;j=e[j].next)
         {
             int k=e[j].t;
-            if (!v[k]&&e[j].val) tmp=max(tmp,dis[k]+e[j].cost-dis[i]);//min
+            if (!vis[k]&&e[j].val) tmp=max(tmp,dis[k]+e[j].cost-dis[i]);//min
         }
     if (tmp==-inf) return 0;
-    for (int i=st;i<=ed;i++) if (v[i])
+    for (int i=st;i<=ed;i++) if (vis[i])
         dis[i]+=tmp;
     return 1;
 }
