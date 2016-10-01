@@ -1,5 +1,7 @@
 //NTT
 #define G 3
+//mod[0]=998244353;
+//mod[1]=1004535809;
 typedef long long LL;
 const LL mod=998244353;
 inline LL exp(LL a, LL b, LL p)
@@ -79,4 +81,45 @@ inline void solve(int l, int k)
 int g = 2;
 while (exp(g, (MOD - 1) / 2, MOD) == 1 || exp(g, (MOD - 1) / 479, MOD) == 1) {
     g ++;
+}
+//当中间结果可能超过10^16时，FFT精度会GG
+//所以要用NTT对两个10^9级别的数取模
+//再对两个结果用CRT合并一下
+LL ex_gcd(LL a, LL b, LL &x, LL &y)
+{
+    if (!b){
+        x=1, y=0;
+        return a;
+    }
+    else{
+        LL d=ex_gcd(b, a % b, y, x);
+        y-=a/b*x;
+        return d;
+    }
+}
+
+LL mul( LL x, LL y, LL p )
+{
+    LL tmp=((LL)((double)x*y/p+1e-6 )*p);
+    return x*y - tmp;
+}
+
+
+LL crt(int n, LL* a, LL* p)
+{
+    LL pp=1, tmp=0;
+    for(int i=0;i<n;i++) pp=pp*p[i];
+    for(int i=0;i<n;i++)
+    {
+        LL m=pp/p[i], x, y;
+        ex_gcd(m,p[i],x,y);
+        x=(x%p[i]+p[i])%p[i];
+        tmp=(tmp+mul(mul(a[i],m,pp),x,pp))%pp;//注意overflow
+    }
+    return tmp;
+}
+
+LL gcd(LL a,LL b)
+{
+    return (b==0?a:gcd(b, a%b));
 }
