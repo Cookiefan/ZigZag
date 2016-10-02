@@ -127,7 +127,6 @@ int main()
 			e[1]=d[i];
 			tmp=max(tmp, crt(2, e, mod)*2);
 		}
-
 		printf("%lld\n", ans-tmp);
 	}
 	return 0;
