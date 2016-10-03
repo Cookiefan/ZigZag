@@ -54,15 +54,13 @@ void dfs(int x, int fa)
 
 LL cnt(int x, LL p)
 {
-    LL tmp=1;
-    for (int i=2;i<=2*x;i+=2)
-        tmp=tmp*com(2*x, i, oo)%oo;
-    tmp=tmp*invf[x]%oo;
+    LL tmp=com(2*x, x, p)*fac[x];
     return tmp;
 }
 
 int main()
 {
+    //freopen("H.in","r",stdin);
     int mx=2000000;
     fac[0]=1;
     for (int i=1;i<=mx;i++) fac[i]=fac[i-1]*i%oo;
@@ -75,14 +73,14 @@ int main()
     for (int i=1;i<n;i++)
     {
         scanf("%d%d%d",&x,&y,&z);
-        sum=sum*cnt(z, oo)%oo*exp(2, z, oo)%oo;
+        sum=sum*cnt(z, oo)%oo;
         e[x].push_back(edge(y, z));
         e[y].push_back(edge(x, z));
     }
     memset(s,0,sizeof(s));
     dfs(1, 0);
-    for (int i=1;i<=n;i++) cout<<f[i]<<' '; cout<<endl;
-    cout<<sum<<' '<<f[1]<<endl;
+    //for (int i=1;i<=n;i++) cout<<f[i]<<' '; cout<<endl;
+    //cout<<sum<<' '<<f[1]<<endl;
     LL ans=f[1]*sum%oo;
     printf("%lld\n",ans);
 
