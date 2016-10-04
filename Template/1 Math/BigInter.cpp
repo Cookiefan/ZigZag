@@ -33,7 +33,7 @@ high operator -(high a, high b)
 		if (c.e[i]<0) c.e[i]+=p, add=1;
 		else add=0;
 	}
-	while (c.e[c.e[0]]==0) c.e[0]--;
+	while (c.e[c.e[0]]==0 && c.e[0]>0) c.e[0]--;
 	return c;
 }
 
