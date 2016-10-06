@@ -1,12 +1,11 @@
 #include <bits/stdc++.h>
-#define maxn 33000
+#define maxn 63000
 #define low 20
 #define G 3
 using namespace std;
 typedef long long LL;
-typedef double LD;
 const LL oo=1e6+3;
-LL mm[2];
+const LL mm[3]={998244353,1004535809,104857601};
 LL mod;
 inline LL exp(LL a, LL b, LL p)
 {
@@ -39,8 +38,10 @@ inline void ntt(LL *a, int n, int flag)
             for (int j=i;j<n;j+=(k<<1))
             {
                 LL x=a[j], y=w*a[j|k]%mod;
-                a[j]=(x+y)%mod;
-                a[j|k]=(x-y+mod)%mod;
+                a[j]=x+y;
+                while (a[j]>=mod) a[j]-=mod;
+                a[j|k]=x-y+mod;
+                while (a[j|k]>=mod) a[j|k]-=mod;
             }
     }
     if (flag==-1)
@@ -52,7 +53,7 @@ inline void ntt(LL *a, int n, int flag)
 
 int n,m,p;
 LL f[25][maxn], g[maxn], b[maxn];
-LL A[maxn<<1], B[maxn<<1], C[2][maxn<<1];
+LL A[maxn<<1], B[maxn<<1], C[3][maxn<<1];
 LL ex_gcd(LL a, LL b, LL &x, LL &y)
 {
     if (!b){
@@ -72,7 +73,7 @@ LL mul( LL x, LL y, LL p )
     return x*y - tmp;
 }
 
-LL crt(int n, LL* a, LL* p)
+LL crt(int n, LL* a, const LL* p)
 {
     LL pp=1, tmp=0;
     for(int i=0;i<n;i++) pp=pp*p[i];
@@ -85,6 +86,7 @@ LL crt(int n, LL* a, LL* p)
     }
     return tmp;
 }
+
 void roll(LL *a, LL *b, LL *c, int n, int m)
 {
     int num=1;
@@ -104,25 +106,26 @@ void roll(LL *a, LL *b, LL *c, int n, int m)
     {
         tmp[0]=C[0][i];
         tmp[1]=C[1][i];
-        c[i]=crt(2, tmp, mm);
-    }
-    for (int i=m;i<num;i++)
-        c[i%m]=(c[i%m]+c[i]);
+        c[i]=crt(2, tmp, mm)%oo;
+        if (i>=m)
+        {
+            c[i%m]=c[i%m]+c[i];
+            while (c[i%m]>=oo) c[i%m]-=oo;
+        }
+    }       
 }
 
 int main()
 {
-    mm[0]=998244353;
-    mm[1]=1004535809;
-    freopen("H.in","r",stdin);
+    //freopen("H.in","r",stdin);
     scanf("%d%d%d",&n,&m,&p);
     //memset(f, 0, sizeof(f));
     for (int i='A';i<='Z';i++)
-        f[0][i%m]++,f[0][i%m]++,
+        f[0][i%m]++,
     //memset(g, 0, sizeof(g));
-    g[0]=g[0]=1;
+    g[0]=1;
     LL shift=p;
-    for (int k=0;k<=low;k++)
+     for (int k=0;k<=low;k++)
     {
         if (n&1)
         {
@@ -131,7 +134,7 @@ int main()
             {
                 int j=(LL)i*shift%m;
                 b[j]=b[j]+g[i];
-                //while (b[j]>=oo) b[j]-=oo;
+                while (b[j]>=oo) b[j]-=oo;
             }
             roll(f[k], b, g, m, m);
         }
@@ -140,19 +143,19 @@ int main()
         {
             int j=(LL)i*shift%m;
             b[j]=b[j]+f[k][i];
-            //while (b[j]>=oo) b[j]-=oo;
+            while (b[j]>=oo) b[j]-=oo;
         }
         roll(f[k], b, f[k+1], m, m);
         n>>=1;
         if (!n) break;
         shift=shift*shift%m;
-    } 
-    /*for (int i=0;i<m;i++) cout<<g[0][i]<<' '; cout<<endl;
-    for (int i=0;i<m;i++) cout<<g[1][i]<<' '; cout<<endl;*/
+    }   
+    //for (int i=0;i<m;i++) cout<<g[i]<<' '; cout<<endl;
+
     LL ans=0;
     for (int i=0;i<m;i++)
     {
-        LL tmp=1LL*g[i]*(g[i]-1)/2;
+        LL tmp=g[i]*(g[i]-1)/2%oo;
         ans=(ans+tmp)%oo;
     }
     printf("%d\n",ans);

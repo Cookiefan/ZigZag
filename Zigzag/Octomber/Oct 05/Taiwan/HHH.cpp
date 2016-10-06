@@ -85,7 +85,7 @@ void roll(LL *a, LL *b, LL *c, int n, int m)
 
 int main()
 {
-    freopen("H.in","r",stdin);
+    // freopen("H.in","r",stdin);
     scanf("%d%d%d",&n,&m,&p);
     for (int i='A';i<='Z';i++) f[0][i%m]+=1;
     g[0]=1;

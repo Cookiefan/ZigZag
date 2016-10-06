@@ -1,8 +1,8 @@
 //慢速乘
-llg mul(llg a,llg b,llg p)
+LL mul(LL a,LL b,LL p)
 {
 	a%=p,b%=p;
-	llg tmp=0;
+	LL tmp=0;
 	while (b)
 	{
 		if (b&1) tmp=(tmp+a)%p;

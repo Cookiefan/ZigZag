@@ -1,162 +1,205 @@
+#include <iostream>
+#include <string>
+#include <cstring>
 #include <cstdio>
+#include <algorithm>
+#include <cmath>
 #include <vector>
-#define mul(x, y, z) (1ll * (x) * (y) % (z));
-
+#include <map>
+#include <bitset>
+#include <queue>
+#include <set>
+#pragma comment(linker, "/STACK:102400000,102400000")
 using namespace std;
 
-const int mod = 1000003;
-const int inv2 = 500002;
-const int MOD[] = {998244353, 995622913};
-const int ROOT[] = {3, 5};
+#define LL long long 
+#define ULL unsigned long long
+#define eps 1e-9
+#define N (200000 + 10)
+#define pii pair<int,int>
+#define MP make_pair
+#define PB push_back
+#define inf 0x3f3f3f3f
+#define md (ll+rr>>1)
+#define lson ll, md, ls
+#define rson md + 1, rr, rs
+#define ls i<<1
+#define rs i<<1|1
+#define mod 1000003
+#define MOD 1000003  
+#define K 3  
+  
+const int m[K] = {1004535809, 998244353, 104857601};  
+#define G 3  
+  
+  
+int qpow(int x, int k, int P) {  
+    int ret = 1;  
+    while(k) {  
+        if(k & 1) ret = 1LL * ret * x % P;  
+        k >>= 1;  
+        x = 1LL * x * x % P;  
+    }  
+    return ret;  
+}  
+  
+struct _NTT {  
+    int wn[25], P;  
+  
+    void init(int _P) {  
+        P = _P;  
+        for(int i = 1; i <= 21; ++i) {        
+            int t = 1 << i;        
+            wn[i] = qpow(G, (P - 1) / t, P);        
+        }  
+    }  
+    void change(int *y, int len) {  
+        for(int i = 1, j = len / 2; i < len - 1; ++i) {        
+            if(i < j) swap(y[i], y[j]);        
+            int k = len / 2;        
+            while(j >= k) {        
+                j -= k;        
+                k /= 2;        
+            }        
+            j += k;        
+        }   
+    }  
+    void NTT(int *y, int len, int on) {  
+        change(y, len);        
+        int id = 0;        
+        
+        for(int h = 2; h <= len; h <<= 1) {        
+            ++id;        
+            for(int j = 0; j < len; j += h) {        
+                int w = 1;        
+                for(int k = j; k < j + h / 2; ++k) {        
+                    int u = y[k];        
+                    int t = 1LL * y[k+h/2] * w % P;       
+                    y[k] = u + t;        
+                    if(y[k] >= P) y[k] -= P;        
+                    y[k+h/2] = u - t + P;        
+                    if(y[k+h/2] >= P) y[k+h/2] -= P;    
+                    w = 1LL * w * wn[id] % P;  
+                }        
+            }        
+        }        
+        if(on == -1) {        
+            for(int i = 1; i < len / 2; ++i) swap(y[i], y[len-i]);        
+            int inv = qpow(len, P - 2, P);        
+            for(int i = 0; i < len; ++i)     
+                y[i] = 1LL * y[i] * inv % P;  
+        }        
+    }  
+    void mul(int A[], int B[], int len) {  
+        NTT(A, len, 1);  
+        NTT(B, len, 1);  
+        for(int i = 0; i < len; ++i) A[i] = 1LL * A[i] * B[i] % P;  
+        NTT(A, len, -1);  
+    }  
+}ntt[K];  
+  
+int tmp[N][K], t1[N], t2[N];  
+int r[K][K];  
+  
+int CRT(int a[]) {  
+    int x[K];  
+    for(int i = 0; i < K; ++i) {  
+        x[i] = a[i];  
+        for(int j = 0; j < i; ++j) {  
+            int t = (x[i] - x[j]) % m[i];  
+            if(t < 0) t += m[i];  
+            x[i] = 1LL * t * r[j][i] % m[i];  
+        }  
+    }  
+    int mul = 1, ret = x[0] % MOD;  
+    for(int i = 1; i < K; ++i) {  
+        mul = 1LL * mul * m[i-1] % MOD;  
+        ret += 1LL * x[i] * mul % MOD;  
+        if(ret >= MOD) ret -= MOD;  
+    }  
+    return ret;  
+}  
+  
+void mul(int A[], int B[], int len) {  
+    for(int id = 0; id < K; ++id) {  
+  
+        for(int i = 0; i < len; ++i) {  
+            t1[i] = A[i];  
+            t2[i] = B[i];  
+        }  
+        ntt[id].mul(t1, t2, len);  
+        for(int i = 0; i < len; ++i)   
+            tmp[i][id] = t1[i];  
+    }  
+    for(int i = 0; i < len; ++i) {  
+        A[i] = CRT(tmp[i]);  
+  
+    }  
+}  
+  
+void init() {  
+    for(int i = 0; i < K; ++i) {  
+        for(int j = 0; j < i; ++j) {  
+            r[j][i] = qpow(m[j], m[i] - 2, m[i]);  
+        }  
+    }  
+    for(int i = 0; i < K; ++i) {  
+        ntt[i].init(m[i]);  
+    }  
+}  
 
-int n, m, p, _x, _y ,P;
-int a[30005], b[30005];
-int A[1 << 16], B[1 << 16], C[1 << 16], AA[2][1<<16], BB[2][1 << 16],CC[2][1 << 16];
-int Remain[2];
 
-int qmod(int x, int n, int mod){
-	int res = 1;
-	for (; n; n >>= 1) {
-		if (n & 1) res = mul(res, x, mod);
-		x = mul(x, x, mod);
+int n, M, p;
+int a[N], b[N];
+int x1[N], x2[N];
+
+
+void mymul(int *a, int *b, int cur) {
+	int len = 1;
+	while(len < 2 * M) len <<= 1;
+	for(int i = 0; i < len; ++i) x1[i] = x2[i] = 0;
+	for(int i = 0; i < M; ++i)  {
+		x1[i] = a[i];
+		x2[i*cur % M] += b[i];
 	}
-	return res;
+
+	mul(x1, x2, len);
+	for(int i = 0; i < M; ++i) a[i] = 0;
+	for(int i = 0; i < len; ++i) a[i%M] = (a[i%M] + x1[i] % mod) % mod;
 }
 
-void ex_gcd(int a, int b, int &x, int &y) {
-	if (!a) {
-		x = 0, y = 1;
-		return;
+void calc(int n, int &cur){ 
+	if(n == 1) {
+		cur = p;
+		for(int i = 0; i < M; ++i) a[i] = 0;
+		for(int i = 'A'; i <= 'Z'; ++i)
+			++a[i%M];
+		return ;
 	}
-	ex_gcd(b % a, a, x, y);
-	int t = y;
-	y = x;
-	x = t - (b / a) * y;
-}
-
-long long china(const int m[], int b[]) {
-	long long x, y, i, result, a1, m1, a2, m2;
-	m1 = m[0], a1 = b[0];
-	m2 = m[1]; a2 = b[1];
-	x = _x, y = _y;
-	result = (x * (a2 - a1) % m2 + m2) % m2;
-	a1 = a1 + m1 * result;
-	m1 = m1 * m2;
-	a1 = (a1 % m1 + m1) % m1;
-	return a1;
-}	
-
-namespace NTT {
-	int n, p, mod, n_rev;
-	vector<int> rb;
-	int r[20];
-	int ir[20];
-	void work(int a[], int *roots);
-	void init(int n, int mod, int root);
-	void forward(int a[]) {
-		work(a, r);
-	}
-	void reverse(int a[]) {
-		work(a, ir);
-		for (int i = 0; i < n; ++i) a[i] = mul(a[i], n_rev, mod);
-	}
-};
-
-void NTT::init(int _n, int _mod, int root){
-	n = _n, mod = _mod, rb.resize(n), p = 0;
-	n_rev = qmod(n, mod - 2, mod);
-	while ((1 << p) < n) ++p;
-	for (int i = 0; i < n; ++i) {
-		int x = i, y = 0;
-		for (int j = 0; j < p; ++j) {
-			y = (y << 1) | (x & 1);
-			x >>= 1;
-		}
-		rb[i] = y;
-	}
-	int inv = qmod(root, mod - 2, mod);
-	r[p - 1] = qmod(root, (mod - 1) / (1 << p), mod);
-	ir[p - 1] = qmod(inv, (mod - 1) / (1 << p), mod);
-	for (int i = p - 2; i >= 0; --i) {
-		r[i] = mul(r[i + 1], r[i + 1], mod);
-		ir[i] = mul(ir[i + 1], ir[i + 1], mod);
-	}
-}
-
-void NTT::work(int a[], int *r) {
-	for (int i = 0; i < n; ++i)
-		if (rb[i] > i)
-			swap(a[i], a[rb[i]]);
-	for (int len = 2; len <= n; len <<= 1) {
-		int root = *r++;
-		for (int i = 0; i < n; i += len) {
-			int w = 1;
-			for (int j = 0; j < len / 2; ++j) {
-				int u = a[i + j];
-				int v = mul(a[i + j + len / 2], w, mod);
-				a[i + j] = u + v < mod ? u + v : u + v - mod;
-				a[i + j + len / 2] = u - v >= 0 ? u - v : u - v + mod;
-				w = mul(w, root, mod);
+	calc(n>>1, cur);
+	mymul(a, a, cur);
+	cur = cur * cur % M;
+	if(n & 1) {
+		for(int i = 0; i < M; ++i) b[i] = 0;
+		for(int i = 'A'; i <= 'Z'; ++i) {
+			for(int j = 0; j < M; ++j) {
+				b[(i+j*p)%M] = (b[(i+j*p)%M] + a[j]) % mod;
 			}
 		}
-	}
-}
-
-void MUL(int A[], int B[], int C[], int n) {	
-	for (int i = 0; i < 2; ++i) {
-		for (int j = 0; j < n; ++j) AA[i][j] = A[j], BB[i][j] = B[j];
-		NTT::init(n, MOD[i], ROOT[i]);
-		NTT::forward(AA[i]);
-		NTT::forward(BB[i]);
-		for (int j = 0; j < n; ++j) CC[i][j] = mul(AA[i][j], BB[i][j], MOD[i]);
-		NTT::reverse(CC[i]);
-	}
-	for (int i = 0; i < n; ++i) {
-		for (int j = 0; j < 2; ++j) Remain[j] = CC[j][i];
-		C[i] = china(MOD, Remain) % mod;
-	}
-}
-
-void calc(int a[], int b[], int c[], int p, int m) {
-	int len = 1;
-	while (len < m) len <<= 1;
-	len <<= 1;
-	for (int i = 0; i < len; ++i) A[i] = B[i] = 0;
-	for (int i = 0; i < m; ++i) A[i * p % m] += a[i];
-	for (int i = 0; i < m; ++i) B[i] += b[i];
-	MUL(A, B, C, len);
-	for (int i = 0; i < m; ++i) c[i] = 0;
-	for (int i = 0; i < len; ++i) c[i % m] += C[i]; 
-}
-
-void Calc(int n, int &P) {
-	if (n == 1) {
-		P = p;
-		for (int i = 0; i < m; ++i) a[i] = 0;
-		for (int i = 'A'; i <= 'Z'; ++i) ++a[i % m];
-		return;
-	}
-	Calc(n >> 1, P);
-	calc(a, a, a, P, m);
-	P = P * P % m;
-	if (n & 1) {
-		for (int i = 0; i < m; ++i) b[i] = 0;
-		for (int i = 'A'; i <= 'Z'; ++i)
-			for (int j = 0; j < m; ++j)
-				b[(i + j * p) % m] = (b[(i + j * p) % m] + a[j]) % mod;
-		for (int i = 0; i < m; ++i) a[i] = b[i];
-		P = P * p % m;
+		for(int i = 0; i < M; ++i) a[i] = b[i];
+		cur = cur * p % M;
 	}
 }
 
 int main() {
-	ex_gcd(MOD[0], MOD[1], _x, _y);
-	scanf("%d%d%d", &n, &m, &p);
-	Calc(n, P);
+	init();
+	scanf("%d%d%d", &n, &M, &p);
+	int cur;
+	calc(n, cur);
+	int inv = qpow(2, mod-2, mod);
 	int ans = 0;
-	for (int i = 0; i < m; ++i) {
-		ans = (ans + 1ll * a[i] * (a[i] + mod - 1) % mod * inv2) % mod;
+	for(int i = 0; i <M; ++i) {
+		ans = (ans + (LL) a[i] * (a[i] - 1 + mod) % mod * inv % mod) %mod;
 	}
 	printf("%d\n", ans);
-	return 0;
 }

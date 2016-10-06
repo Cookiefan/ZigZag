@@ -4,22 +4,23 @@
 using namespace std;
 typedef long long LL;
 typedef double LD;
-const LL oo=1e6+3;
+const int oo=1e6+3;
 const LD PI=acos(-1.0);
 struct cpx
 {
     LD x, y;
     cpx(LD _x=0, LD _y=0):x(_x), y(_y){}
+    cpx operator +(const cpx &b)const{
+    return cpx(x+b.x, y+b.y);
+    }
+    cpx operator -(const cpx &b)const{
+        return cpx(x-b.x, y-b.y);
+    }
+    cpx operator *(const cpx &b)const{
+        return cpx(x*b.x-y*b.y, x*b.y+y*b.x);
+    }
 };
-cpx operator +(cpx a, cpx b){
-    return cpx(a.x+b.x, a.y+b.y);
-}
-cpx operator -(cpx a, cpx b){
-    return cpx(a.x-b.x, a.y-b.y);
-}
-cpx operator *(cpx a, cpx b){
-    return cpx(a.x*b.x-a.y*b.y, a.x*b.y+a.y*b.x);
-}
+
 int rev(int x, int n){
     int tmp=0;
     for (int i=n>>1;i;i>>=1, x>>=1)
@@ -46,12 +47,12 @@ void fft(cpx *a, int n, int flag){
 
 LL b[maxn], c[maxn];
 int n,m,p;
-LL f[22][maxn], g[maxn];
+LL f[25][maxn], g[maxn];
 cpx A1[maxn<<1], B1[maxn<<1], A2[maxn<<1], B2[maxn<<1], A3[maxn<<1];
 void roll(LL *a, LL *b, LL *c, int n, int m)
 {
     int num=1;;
-    LL O=sqrt(oo);
+    int O=sqrt(oo);
     while (num<n+m) num<<=1;
     for (int i=0;i<num;i++)
     {
@@ -84,45 +85,42 @@ void roll(LL *a, LL *b, LL *c, int n, int m)
 
 int main()
 {
-    freopen("H.in","r",stdin);
+    // freopen("H.in","r",stdin);
     scanf("%d%d%d",&n,&m,&p);
-    memset(f, 0, sizeof(f));
-    for (int i='A';i<='Z';i++)
-        f[0][i%m]+=1;
-    LL shift=p;
-    for (int k=1;k<=low;k++,shift=shift*shift%m)
-    {
-        memset(b, 0, sizeof(b));
-        for (int i=0;i<m;i++)
-        {
-            int j=i*shift%m;
-            b[j]=b[j]+f[k-1][i];
-            while (b[j]>=oo) b[j]-=oo;
-        }
-        roll(f[k-1], b, f[k], m, m);
-    }
-    memset(g, 0, sizeof(g));
+    for (int i='A';i<='Z';i++) f[0][i%m]+=1;
     g[0]=1;
-    shift=p;
-    for (int k=0;k<=low;k++, shift=shift*shift%m)
-        if ((n>>k)&1)
+    LL shift=p;
+    for (int k=0;k<=low;k++)
+    {
+        if (n&1)
         {
             memset(b, 0, sizeof(b));
             for (int i=0;i<m;i++)
             {
-                int j=i*shift%m;
+                int j=(LL)i*shift%m;
                 b[j]=b[j]+g[i];
                 while (b[j]>=oo) b[j]-=oo;
             }
             roll(f[k], b, g, m, m);
         }
+        memset(b, 0, sizeof(b));
+        for (int i=0;i<m;i++)
+        {
+            int j=(LL)i*shift%m;
+            b[j]=b[j]+f[k][i];
+            while (b[j]>=oo) b[j]-=oo;
+        }
+        roll(f[k], b, f[k+1], m, m);
+        n>>=1;
+        if (!n) break;
+        shift=shift*shift%m;
+    }   
+    //for (int i=0;i<m;i++) cout<<g[i]<<' '; cout<<endl;
     LL ans=0;
     for (int i=0;i<m;i++)
     {
-        LL tmp=g[i]*(g[i]-1)/2;
-        tmp=(tmp%oo+oo)%oo;
-        ans+=tmp;
-        while (ans>=oo) ans-=oo;
+        LL tmp=1LL*g[i]*(g[i]-1)/2;
+        ans=(ans+tmp)%oo;
     }
     printf("%d\n",ans);
     return 0;
