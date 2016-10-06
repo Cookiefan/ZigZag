@@ -57,7 +57,7 @@ inline void roll(LL *a, LL *b, LL *c, int n, int m)
 	for (int i=0;i<num;i++) c[i]=a[i]*b[i]%mod;
 	ntt(c, num, -1);
 }
-merge
+//merge
 inline void solve(int l, int k)
 {
 	if (k==0)
