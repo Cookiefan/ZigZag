@@ -16,13 +16,12 @@ struct matrix
 	{
 		memset(e,0,sizeof(e));
 	}
-	friend matrix operator *(matrix a, matrix b)
-	{
+	matrix operator *(const matrix &b)const{
 		matrix c;
 		for (int k=0;k<ms;k++)
-			for (int i=0;i<ms;i++)
-				for (int j=0;j<ms;j++)
-					(c.e[i][j]+=a.e[i][k]*b.e[k][j]%oo)%=oo;
+			for (int i=0;i<ms;i++) if(e[i][k])
+				for (int j=0;j<ms;j++) if(b.e[k][j])
+					c.e[i][j]+=e[i][k]*b.e[k][j];
 		return c;
 	}
 	friend matrix operator ^(matrix e, LL k)

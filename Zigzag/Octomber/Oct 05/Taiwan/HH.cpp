@@ -5,7 +5,7 @@
 using namespace std;
 typedef long long LL;
 const LL oo=1e6+3;
-const LL mm[3]={998244353,1004535809,104857601};
+const LL mm[2]={998244353,1004535809};
 LL mod;
 inline LL exp(LL a, LL b, LL p)
 {
@@ -69,8 +69,8 @@ LL ex_gcd(LL a, LL b, LL &x, LL &y)
 
 LL mul( LL x, LL y, LL p )
 {
-    LL tmp=((LL)((double)x*y/p+1e-6 )*p);
-    return x*y - tmp;
+    LL tmp=x*y-((LL)((double)x*y/p+1e-6 )*p);
+    return tmp<0?tmp+p:tmp;
 }
 
 LL crt(int n, LL* a, const LL* p)
@@ -109,15 +109,15 @@ void roll(LL *a, LL *b, LL *c, int n, int m)
         c[i]=crt(2, tmp, mm)%oo;
         if (i>=m)
         {
-            c[i%m]=c[i%m]+c[i];
-            while (c[i%m]>=oo) c[i%m]-=oo;
+            c[i%m]=(c[i%m]+c[i])%oo;
+            // while (c[i%m]>=oo) c[i%m]-=oo;
         }
     }       
 }
 
 int main()
 {
-    //freopen("H.in","r",stdin);
+    // freopen("H.in","r",stdin);
     scanf("%d%d%d",&n,&m,&p);
     //memset(f, 0, sizeof(f));
     for (int i='A';i<='Z';i++)
