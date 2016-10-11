@@ -4,6 +4,7 @@
 //mod[1]=1004535809;
 typedef long long LL;
 const LL mod=998244353;
+//const LL mod=50000000001507329LL;
 inline LL exp(LL a, LL b, LL p)
 {
 	a%=p;
@@ -100,8 +101,8 @@ LL ex_gcd(LL a, LL b, LL &x, LL &y)
 
 LL mul( LL x, LL y, LL p )
 {
-    LL tmp=((LL)((double)x*y/p+1e-6 )*p);
-    return x*y - tmp;
+    LL tmp=x*y-((LL)((double)x*y/p+1e-6 )*p);
+    return (tmp+p)%p;
 }
 
 

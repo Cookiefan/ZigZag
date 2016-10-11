@@ -81,8 +81,10 @@ LL crt(int n, LL* a, const LL* p)
     {
         LL m=pp/p[i], x, y;
         ex_gcd(m,p[i],x,y);
-        x=(x%p[i]+p[i])%p[i];
-        tmp=(tmp+mul(mul(a[i],m,pp),x,pp))%pp;//注意overflow
+        x=x%p[i]+p[i];
+        while (x>=p[i]) x%=p[i];
+        tmp=tmp+mul(mul(a[i],m,pp),x,pp);//注意overflow
+        while (tmp>=pp) tmp-=pp;
     }
     return tmp;
 }
@@ -109,15 +111,15 @@ void roll(LL *a, LL *b, LL *c, int n, int m)
         c[i]=crt(2, tmp, mm)%oo;
         if (i>=m)
         {
-            c[i%m]=(c[i%m]+c[i])%oo;
-            // while (c[i%m]>=oo) c[i%m]-=oo;
+            c[i%m]=c[i%m]+c[i];
+            while (c[i%m]>=oo) c[i%m]-=oo;
         }
     }       
 }
 
 int main()
 {
-    // freopen("H.in","r",stdin);
+    //freopen("H.in","r",stdin);
     scanf("%d%d%d",&n,&m,&p);
     //memset(f, 0, sizeof(f));
     for (int i='A';i<='Z';i++)

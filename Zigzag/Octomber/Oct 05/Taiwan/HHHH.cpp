@@ -15,7 +15,7 @@ const LL mod=50000000001507329LL;
 
 LL mul( LL x, LL y, LL p )
 {
-    LL tmp=x*y-((LL)((double)x*y/p+1e-6 )*p);
+    LL tmp=x*y-((LL)((long double)x*y/p+1e-6 )*p);
     return (tmp+p)%p;
 }
 
