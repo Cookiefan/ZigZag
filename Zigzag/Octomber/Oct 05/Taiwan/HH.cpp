@@ -5,7 +5,7 @@
 using namespace std;
 typedef long long LL;
 const LL oo=1e6+3;
-const LL mm[3]={998244353,1004535809,104857601};
+const LL mm[2]={998244353,1004535809};
 LL mod;
 inline LL exp(LL a, LL b, LL p)
 {
@@ -53,7 +53,7 @@ inline void ntt(LL *a, int n, int flag)
 
 int n,m,p;
 LL f[25][maxn], g[maxn], b[maxn];
-LL A[maxn<<1], B[maxn<<1], C[3][maxn<<1];
+LL A[maxn<<1], B[maxn<<1], C[2][maxn<<1];
 LL ex_gcd(LL a, LL b, LL &x, LL &y)
 {
     if (!b){
