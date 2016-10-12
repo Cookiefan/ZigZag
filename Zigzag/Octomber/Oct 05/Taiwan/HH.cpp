@@ -69,8 +69,8 @@ LL ex_gcd(LL a, LL b, LL &x, LL &y)
 
 LL mul( LL x, LL y, LL p )
 {
-    LL tmp=((LL)((double)x*y/p+1e-6 )*p);
-    return x*y - tmp;
+    LL tmp=x*y-((LL)((double)x*y/p+1e-6 )*p);
+    return tmp<0?tmp+p:tmp;
 }
 
 LL crt(int n, LL* a, const LL* p)
@@ -81,8 +81,10 @@ LL crt(int n, LL* a, const LL* p)
     {
         LL m=pp/p[i], x, y;
         ex_gcd(m,p[i],x,y);
-        x=(x%p[i]+p[i])%p[i];
-        tmp=(tmp+mul(mul(a[i],m,pp),x,pp))%pp;//注意overflow
+        x=x%p[i]+p[i];
+        while (x>=p[i]) x%=p[i];
+        tmp=tmp+mul(mul(a[i],m,pp),x,pp);//注意overflow
+        while (tmp>=pp) tmp-=pp;
     }
     return tmp;
 }
