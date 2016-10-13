@@ -67,10 +67,11 @@ LL ex_gcd(LL a, LL b, LL &x, LL &y)
     }
 }
 
-LL mul( LL x, LL y, LL p )
+inline LL mul(LL x, LL y, LL mod)
 {
-    LL tmp=x*y-((LL)((double)x*y/p+1e-6 )*p);
-    return tmp<0?tmp+p:tmp;
+    LL ret = 0;
+    __asm__("movq %1,%%rax\n imulq %2\n idivq %3\n":"=d"(ret):"m"(x),"m"(y),"m"(mod):"%rax");
+    return ret;
 }
 
 LL crt(int n, LL* a, const LL* p)
