@@ -1,8 +1,12 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define maxn 100200
+#define sgm 26
 
 struct SAM{
 	int fa[maxn<<1],len[maxn<<1];
 	int ch[maxn<<1][sgm];
-	int num, rot;
+	int num, rot, n;
 	void init(){
 		num=rot=0;
 		memset(fa,-1,sizeof(fa));
@@ -34,8 +38,10 @@ struct SAM{
 	void build(char s[]){
 		int now=rot;
 		int ll=strlen(s);
+		n=strlen(s);
 		for (int i=0;i<ll;i++){
 			int w=s[i]-'a';
+			//多串
 			if (ch[now][w]!=-1&&len[ch[now][w]]==i+1)
 				now=ch[now][w];
             else
@@ -50,6 +56,37 @@ struct SAM{
 			if (ch[now][w]==-1) return 0;
 			else now=ch[now][w];
 		}
-		return len[now]-len[fa[now]];
+		return now;
+	}
+	int pool[maxn<<1],q[maxn<<1];
+	void topo(){
+		memset(pool,0,sizeof(pool));
+		for (int i=0;i<=num;i++) pool[len[i]]++;
+		for (int i=1;i<=n;i++) pool[i]+=pool[i-1];
+		for (int i=num;i>=0;i--) q[--pool[len[i]]]=i;
+	}
+	void show(){
+		for (int i=0;i<num;i++)
+		{
+			cout<<i<<": ";
+			for (int w=0;w<26;w++)
+				if (ch[i][w]!=-1)
+					cout<<(char)('a'+w)<<"->"<<ch[i][w]<<", ";
+			cout<<"fa->"<<fa[i];
+			cout<<endl;
+		}
 	}
 }sam;
+// input:
+// aabbabd
+// output:
+// 0: a->1, b->5, d->9, fa->-1
+// 1: a->2, b->8, fa->0
+// 2: b->3, fa->1
+// 3: b->4, fa->8
+// 4: a->6, fa->5
+// 5: a->6, b->4, d->9, fa->0
+// 6: b->7, fa->1
+// 7: d->9, fa->8
+// 8: b->4, d->9, fa->5
+// 9: fa->0

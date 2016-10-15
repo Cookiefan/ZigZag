@@ -64,7 +64,8 @@ void splay(int x)
 	{
 		int y=fa[x], z=fa[y];
 		if (!is_root(y))
-			((c[y][0]==x) ^ (c[z][0]==y))?zigzag(x):zigzag(y);
+			((c[y][0]==x) ^ (c[z][0]==y))
+				?zigzag(x):zigzag(y);
 		zigzag(x);
 	}
 	update(x);

@@ -51,16 +51,6 @@ struct SAM{
             	now=insert(now,w);
 		}
 	}
-	int query(char s[]){
-		int now=rot;
-		int ll=strlen(s);
-		for (int i=0;i<ll;i++){
-			int w=s[i]-'a';
-			if (ch[now][w]==-1) return 0;
-			else now=ch[now][w];
-		}
-		return len[now]-len[fa[now]];
-	}
 	int pool[maxn<<1],q[maxn<<1];
 	LL topo(){
 		LL tmp=0;
@@ -78,6 +68,17 @@ struct SAM{
 		}
 		return tmp;
 	}
+	void show(){
+		for (int i=0;i<=num;i++)
+		{
+			cout<<i<<": ";
+			for (int w=0;w<26;w++)
+				if (ch[i][w]!=-1)
+					cout<<(char)('a'+w)<<"->"<<ch[i][w]<<", ";
+			cout<<"fa->"<<fa[i];
+			cout<<endl;
+		}
+	}
 }sam;
 
 char s[maxn];
@@ -89,6 +90,8 @@ int main()
 	//freopen("A.in","r",stdin);
 	sam.init();
 	scanf(" %s",s);
+	sam.build(s);
+	sam.show();
 	n=strlen(s);
 	reverse(s,s+n);
 	sam.build(s);
