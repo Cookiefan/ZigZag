@@ -1,9 +1,3 @@
-#include <bits/stdc++.h>
-using namespace std;
-#define maxn 1202000
-#define sgm 26
-typedef long long LL;
-
 struct LCT{
 	int fa[maxn],c[maxn][2];
 	int key[maxn],add[maxn];
@@ -144,43 +138,3 @@ struct SAM{
 		}
 	}
 }sam;
-
-char s[3000020];
-void decode(int msk){
-	int len=strlen(s);
-	for (int j=0;j<len;j++){
-		msk=(msk*131+j)%len;
-		char e=s[j];
-		s[j]=s[msk];
-		s[msk]=e;
-	}
-}
-
-int m,msk,ans;
-char sign[20];
-
-int main()
-{
-	//freopen("B.in","r",stdin);
-	scanf("%d",&m);
-	scanf(" %s",s);
-	sam.init();
-	lct.init();
-	sam.build(s);
-	//sam.show();
-	msk=ans=0;
-	for (int i=1;i<=m;i++){
-		scanf(" %s",sign);
-		scanf(" %s",s);
-		decode(msk);
-		if (sign[0]=='A'){
-			sam.build(s);
-		}
-		else{
-			ans=sam.query(s);
-			msk^=ans;
-			printf("%d\n",ans);
-		}
-	}
-	return 0;
-}

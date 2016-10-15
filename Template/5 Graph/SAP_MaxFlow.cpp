@@ -6,8 +6,10 @@ struct edge
 
 void add_edge(int x, int y, int z)
 {
-	e[++tot].s=x; e[tot].t=y; e[tot].val=z; e[tot].next=fir[x]; fir[x]=tot;
-	e[++tot].s=y; e[tot].t=x; e[tot].val=0; e[tot].next=fir[y]; fir[y]=tot;
+	e[++tot].s=x; e[tot].t=y; e[tot].val=z;
+	e[tot].next=fir[x]; fir[x]=tot;
+	e[++tot].s=y; e[tot].t=x; e[tot].val=0;
+	e[tot].next=fir[y]; fir[y]=tot;
 }
 
 int dfs(int x, int flow)
