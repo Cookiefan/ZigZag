@@ -1,11 +1,12 @@
 #include <bits/stdc++.h>
-#define maxn 200200
-#define maxm 10000020
+#define maxn 20020
+#define maxc 1000020
+#define maxm 5000002
 using namespace std;
 
 int lc[maxm], rc[maxm], s[maxm];
 int a[maxn], rot[maxn];
-set<int> col[maxn];
+set<int> col[maxc];
 int num, n, m, ans, tot;
 
 inline int build(int l, int r)
@@ -56,6 +57,7 @@ inline void write(int x, int l, int r)
 }
 
 void add(int p, int x, int z){
+	if (p==0) return ;
 	for (int i=p;i<=n;i+=(i&-i)){
 		rot[i]=change(rot[i], 0, n, x, z);
 	}
@@ -71,19 +73,19 @@ int ask(int p, int x){
 
 int main()
 {
-	freopen("CC.in","r",stdin);
+	//freopen("CC.in","r",stdin);
 	scanf("%d%d",&n,&m);
-	int tot=0;
-	for (int i=1;i<=10;i++) col[i].clear();
-	for (int i=1;i<=n;i++){
-		scanf("%d",&a[i]);
-		col[a[i]].insert(i);
-		tot=max(a[i],tot);
-	}
+	int tot=1e6;
 	for (int i=1;i<=tot;i++){
+		col[i].clear();
 		col[i].insert(0);
 		col[i].insert(n+1);
 	}
+	for (int i=1;i<=n;i++){
+		scanf("%d",&a[i]);
+		col[a[i]].insert(i);
+	}
+	num=0;
 	rot[0]=build(0,n);
 	for (int i=1;i<=n;i++) rot[i]=rot[0];
 	for (int i=1;i<=n;i++){
