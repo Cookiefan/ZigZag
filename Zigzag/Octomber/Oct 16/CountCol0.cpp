@@ -7,6 +7,7 @@ using namespace std;
 int lc[maxm], rc[maxm], s[maxm];
 int a[maxn], rot[maxn];
 set<int> col[maxc];
+typedef set<int>::iterator sit;
 int num, n, m, ans, tot;
 
 inline int build(int l, int r)
@@ -56,14 +57,14 @@ inline void write(int x, int l, int r)
     write(rc[x], mid+1, r);
 }
 
-void add(int p, int x, int z){
+inline void add(int p, int x, int z){
 	if (p==0) return ;
 	for (int i=p;i<=n;i+=(i&-i)){
 		rot[i]=change(rot[i], 0, n, x, z);
 	}
 }
 
-int ask(int p, int x){
+inline int ask(int p, int x){
 	int tmp=0;
 	for (int i=p;i>=1;i-=(i&-i)){
 		tmp+=query(rot[i], 0, n, x);
@@ -71,16 +72,21 @@ int ask(int p, int x){
 	return tmp;
 }
 
+inline int prev(int c, int x){
+	sit p=col[c].lower_bound(x);
+	if (p!=col[c].begin()) return *(--p);
+	else return 0;
+}
+inline int succ(int c, int x){
+	sit p=col[c].upper_bound(x);
+	if (p!=col[c].end()) return *p;
+	else return 0;
+}
+
 int main()
 {
-	//freopen("CC.in","r",stdin);
+	freopen("CC.in","r",stdin);
 	scanf("%d%d",&n,&m);
-	int tot=1e6;
-	for (int i=1;i<=tot;i++){
-		col[i].clear();
-		col[i].insert(0);
-		col[i].insert(n+1);
-	}
 	for (int i=1;i<=n;i++){
 		scanf("%d",&a[i]);
 		col[a[i]].insert(i);
@@ -89,11 +95,12 @@ int main()
 	rot[0]=build(0,n);
 	for (int i=1;i<=n;i++) rot[i]=rot[0];
 	for (int i=1;i<=n;i++){
-		int pre=*(--col[a[i]].lower_bound(i));
-		add(i, pre, 1);
+		int ll=prev(a[i],i);
+		add(i, ll, 1);
 	}
 	char sign;
-	int x,y,pre,nxt;
+	int x,y,ll,rr;
+	sit pre,nxt;
 	for (int i=1;i<=m;i++){
 		// for (int j=0;j<=n;j++){
 		// 	cout<<j<<": ";
@@ -107,26 +114,22 @@ int main()
 			printf("%d\n",ask(y, x-1)-ask(x-1, x-1));
 		}
 		else{
-			pre=*(--col[a[x]].lower_bound(x));
-			nxt=*(++col[a[x]].lower_bound(x));
-			//cout<<pre<<' '<<nxt<<endl;
-			add(x, pre, -1);
-			if (nxt!=n+1){
-				add(nxt, x, -1);
-				add(nxt, pre, 1);
+			ll=prev(a[x], x);
+			rr=succ(a[x], x);
+			add(x, ll, -1);
+			if (rr){
+				add(rr, x, -1);
+				add(rr, ll, 1);
 			}
-
 			col[a[x]].erase(x);
 			a[x]=y;
 			col[a[x]].insert(x);
-			//for (auto t:col[a[x]]) cout<<t<<' '; cout<<endl;
-			pre=*(--col[a[x]].lower_bound(x));
-			nxt=*(++col[a[x]].lower_bound(x));
-			//cout<<pre<<' '<<nxt<<endl;
-			add(x, pre, 1);
-			if (nxt!=n+1){
-				add(nxt, pre, -1);
-				add(nxt, x, 1);
+			ll=prev(a[x], x);
+			rr=succ(a[x], x);
+			add(x, ll, 1);
+			if (rr){
+				add(rr, x, 1);
+				add(rr, ll, -1);
 			}
 		}
 	}
