@@ -1,3 +1,6 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define maxn 1002000
 //AC自动机
 struct ACAM{
     int ch[maxn][27], v[maxn];
@@ -76,28 +79,30 @@ struct ACAM{
                 if (ch[i][w]!=rot)
                     cout<<(char)('a'+w)<<"->"<<ch[i][w]<<", ";
             cout<<"fa->"<<fail[i];
-            cout<<' '<<v[i];
             cout<<endl;
         }
     }
 }acam;
-// input:
-//5
-// she
-// he
-// say
-// shr
-// her
-// yasherhs
-// output:
-// 0: h->4, s->1, fa->0
-// 1: a->6, h->2, s->1, fa->0
-// 2: e->3, h->4, r->8, s->1, fa->4
-// 3: h->4, r->9, s->1, fa->5
-// 4: e->5, h->4, s->1, fa->0
-// 5: h->4, r->9, s->1, fa->0
-// 6: h->4, s->1, y->7, fa->0
-// 7: h->4, s->1, fa->0
-// 8: h->4, s->1, fa->0
-// 9: h->4, s->1, fa->0
-// 3
+
+int n;
+char s[10000200];
+
+int main()
+{
+    freopen("2.in","r",stdin);
+    int Case;
+    scanf("%d",&Case);
+    for (int o=1;o<=Case;o++){
+        acam.init();
+        scanf("%d",&n);
+        for (int i=1;i<=n;i++){
+            scanf(" %s",s);
+            acam.build(s);
+        }
+        acam.connect();
+        acam.show();
+        scanf(" %s",s);
+        printf("%d\n",acam.query(s));
+    }
+    return 0;
+}

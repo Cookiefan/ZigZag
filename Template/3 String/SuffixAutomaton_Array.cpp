@@ -66,7 +66,7 @@ struct SAM{
 		for (int i=num;i>=0;i--) q[--pool[len[i]]]=i;
 	}
 	void show(){
-		for (int i=0;i<num;i++)
+		for (int i=0;i<=num;i++)
 		{
 			cout<<i<<": ";
 			for (int w=0;w<26;w++)
