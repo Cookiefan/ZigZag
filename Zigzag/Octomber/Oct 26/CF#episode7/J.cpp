@@ -102,7 +102,7 @@ vector<int> t[maxn];
 void dfs(int x){
     for (int j=0;j<t[x].size();j++){
         int y=t[x][j];
-        if (y==fa[x]){
+        if (y!=fa[x]){
             fa[y]=x;
             dfs(y);
         }
@@ -117,7 +117,7 @@ void show(){
 
 int main()
 {
-    freopen("J.in","r",stdin);
+    //freopen("J.in","r",stdin);
     scanf("%d",&n);
     int x,y ;
     for (int i=1;i<n;i++){
@@ -126,7 +126,6 @@ int main()
         t[y].push_back(x);
         //show();
     }
-    dfs(1);
     key[0]=sum[0]=rev[0]=0;
     lmx[0]=rmx[0]=smx[0]=-inf;
     for (int i=1;i<=n;i++){
@@ -134,7 +133,8 @@ int main()
         rev[i]=0;
         sum[i]=lmx[i]=rmx[i]=smx[i]=key[i];
     }
-    
+    dfs(1);
+    //show();
     scanf("%d",&m);
     for (int i=1;i<=m;i++){
         scanf("%d%d",&x,&y);
@@ -142,6 +142,7 @@ int main()
         //LL ans=max(lmx[x], smx[x], rmx[x]);
         access(x);
         int lca=access(y);
+
         splay(x);
         LL ans=-inf;
         ans=max(key[lca], smx[c[lca][1]], key[lca]+lmx[c[lca][1]]);
