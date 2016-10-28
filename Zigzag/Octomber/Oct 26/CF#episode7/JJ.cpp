@@ -118,20 +118,28 @@ void dfs(int x){
     
 int n, m;
 void show(){
-    for (int i=1;i<=n;i++)
-        cout<<"i: "<<i<<' '<<fa[i]<<' '<<c[i][0]<<' '<<c[i][1]<<' '<<sum[i]<<' '<<lmx[i]<<' '<<rmx[i]<<' '<<smx[i]<<endl;
+    for (int i=1;i<=n;i++){
+        relax(i);
+        cout<<"i: "<<i<<' '<<fa[i]<<' '<<c[i][0]<<' '<<c[i][1]<<' '<<rev[i]<<endl;
+    }
+    cout<<endl;
 }
+
+typedef pair<int,int> pii;
+vector<pii> e;
 
 int main()
 {
-    //freopen("J.in","r",stdin);
+    freopen("J.in","r",stdin);
     scanf("%d",&n);
     int x,y ;
     for (int i=1;i<n;i++){
         scanf("%d%d",&x,&y);
-        t[x].push_back(y);
-        t[y].push_back(x);
-        link(x,y);
+        e.push_back({x,y});
+        // t[x].push_back(y);
+        // t[y].push_back(x);
+        //link(x,y);
+        
     }
     key[0]=sum[0]=rev[0]=0;
     lmx[0]=rmx[0]=smx[0]=-inf;
@@ -140,6 +148,10 @@ int main()
         rev[i]=0;
         sum[i]=lmx[i]=rmx[i]=smx[i]=key[i];
     }
+    for (int i=0;i<e.size();i++)
+        link(e[i].first, e[i].second);
+    split(10, 6);
+    show();
     //dfs(1);
     scanf("%d",&m);
     for (int i=1;i<=m;i++){

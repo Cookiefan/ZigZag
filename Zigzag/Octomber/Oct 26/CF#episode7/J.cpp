@@ -112,19 +112,19 @@ void dfs(int x){
 int n, m;
 void show(){
     for (int i=1;i<=n;i++)
-        cout<<"i: "<<i<<' '<<fa[i]<<' '<<c[i][0]<<' '<<c[i][1]<<' '<<sum[i]<<' '<<lmx[i]<<' '<<rmx[i]<<' '<<smx[i]<<endl;
+        cout<<"i: "<<i<<' '<<fa[i]<<' '<<c[i][0]<<' '<<c[i][1]<<endl;
 }
 
 int main()
 {
-    //freopen("J.in","r",stdin);
+    freopen("J.in","r",stdin);
     scanf("%d",&n);
     int x,y ;
     for (int i=1;i<n;i++){
         scanf("%d%d",&x,&y);
         t[x].push_back(y);
         t[y].push_back(x);
-        //show();
+        show();
     }
     key[0]=sum[0]=rev[0]=0;
     lmx[0]=rmx[0]=smx[0]=-inf;
