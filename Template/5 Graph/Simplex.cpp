@@ -1,48 +1,48 @@
 //单纯形(复杂度不确定，慎用!!!)
-int a[maxn][maxm],next[maxm];
-int n,m;
+#include <bits/stdc++.h>
+using namespace std;
+#define maxn 6020
+#define inf 999999999
 
-void pivot(int l,int e)
+int a[1020][10020];
+int nxt[maxn], id[maxn], ans[maxn];
+int p, q, n, m, num;
+
+void pivot(int x,int y)//交换非基x与基y
 {
     int last=-1;
+    swap(id[x+m], id[y]);
     for (int i=0;i<=m;i++)
-        if (a[l][i])
-        {
-            next[i]=last;
+        if (a[x][i]){
+            nxt[i]=last;
             last=i;
         }
-    for (int i=0;i<=n;i++)
-    {
-        if (a[i][e]==0||i==l) continue;
-        for (int j=last;j!=-1;j=next[j])
-        {
-            //cout<<j<<' ';
-            if (j==e) continue;
-            a[i][j]-=a[i][e]*a[l][j];
+    for (int i=0;i<=n;i++){
+        if (i==x||a[i][y]==0) continue;
+        for (int j=last;j!=-1;j=nxt[j]){
+            if (j==y) continue;
+            a[i][j]-=a[i][y]*a[x][j];
         }
-        //cout<<endl;
-        a[i][e]=-a[i][e];
+        a[i][y]=-a[i][y];
     }
 }
 
 int simplex()
 {
-    while (1)
-    {
-        int now=0;
+    for (int i=1;i<=m;i++) id[i]=i;
+    while (1){
+        int y=0;
         for (int i=1;i<=m;i++) 
-            if (a[0][i]>0) { now=i; break; }
-        if (now==0) return -a[0][0];
-        int tmp,mi=inf;
-        for (int i=1;i<=n;i++)
-        {
-            if (a[i][now]>0&&a[i][0]<mi)
-            {
-                tmp=i;
+            if (a[0][i]>0) { y=i; break; }
+        if (y==0) return -a[0][0];
+        int x,mi=inf;
+        for (int i=1;i<=n;i++){
+            if (a[i][y]>0&&a[i][0]<mi){
+                x=i;
                 mi=a[i][0];
             }
         }
-        pivot(tmp,now);
+        pivot(x,y);
     }
 }
 
@@ -59,6 +59,8 @@ int main()
             a[j][i]=1;
     }
     int ans=simplex();
+    for (int i=m+1;i<=m+n;i++)
+        ans[id[i]]=a[i-m][0];
     printf("%d\n",ans);
     return 0;
 }

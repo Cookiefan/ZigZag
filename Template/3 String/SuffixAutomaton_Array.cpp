@@ -7,12 +7,16 @@ struct SAM{
 	int fa[maxn<<1],len[maxn<<1];
 	int ch[maxn<<1][sgm];
 	int num, rot, n;
-	void init(){
-		num=rot=0;
-		memset(fa,-1,sizeof(fa));
-		memset(ch,-1,sizeof(ch));
-		memset(len,0,sizeof(len));
-	}
+	int new_node(int x){
+        fa[x]=-1;
+        flag[x]=len[x]=0;
+        for (int i=0;i<26;i++)
+            ch[x][i]=-1;
+        return x;
+    }
+    void init(){
+        num=rot=new_node(0);
+    }
 	int insert(int p, int w){
 		int np=++num;
 		len[np]=len[p]+1;
@@ -58,6 +62,31 @@ struct SAM{
 		}
 		return now;
 	}
+	int match(char s[]){
+        int now=rot, tmp=0, ans=0;
+        int ll=strlen(s);
+        for (int i=0;i<ll;i++){
+            int w=s[i]-'a';
+            if (ch[now][w]!=-1){
+                now=ch[now][w];
+                tmp++;
+            }
+            else{
+                while (now!=-1&&ch[now][w]==-1)
+                    now=fa[now];
+                if (now!=-1){
+                    tmp=len[now]+1;
+                    now=ch[now][w];
+                }
+                else{
+                    tmp=0;
+                    now=rot;
+                }
+            }
+            ans=max(ans,tmp);
+        }
+        return ans;
+    }
 	int pool[maxn<<1],q[maxn<<1];
 	void topo(){
 		memset(pool,0,sizeof(pool));

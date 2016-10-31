@@ -124,3 +124,16 @@ void solve(int x, int y, int z)
 	key[lca]=z;
 	if (x!=lca) change(x, z);
 }
+
+void dfs(int x)
+{
+    for (int j=0;j<t[x].size();j++)
+    {
+        int y=t[x][j];
+        if (y!=fa[x])
+        {
+            fa[y]=x;
+            dfs(y);
+        }
+    }
+}
