@@ -25,6 +25,14 @@ bool better(int x, int y, int z){
     LL t2=(f[z]-f[y]+s[z]*s[z]-s[y]*s[y])*(s[y]-s[x]);
     return t1>=t2;
 }
+//这里维护的是一个可持久化的单调栈
+//栈里维护的是一个斜率递增的下凸壳
+//每次询问从后往前找到恰好卡在某个斜率的点
+//式子:
+//if (k<j && k is better than j)
+//fj+sj^2-(fk+sk^2)
+//----------------- <= 2*si
+//     sj-sk
 
 void solve(int x, int y){
   f[y]=s[y]*s[y];

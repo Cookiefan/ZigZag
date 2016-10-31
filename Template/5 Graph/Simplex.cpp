@@ -44,8 +44,6 @@ int simplex()
         }
         pivot(x,y);
     }
-    for (int i=m+1;i<=m+n;i++)
-        ans[id[i]]=a[i-m][0];
 }
 
 int main()
@@ -61,6 +59,8 @@ int main()
             a[j][i]=1;
     }
     int ans=simplex();
+    for (int i=m+1;i<=m+n;i++)
+        ans[id[i]]=a[i-m][0];
     printf("%d\n",ans);
     return 0;
 }
