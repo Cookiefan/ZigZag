@@ -1,14 +1,11 @@
 #include <bits/stdc++.h>
 using namespace std;
 #define maxn 100200
-#define lson x<<1,l,mid
-#define rson x<<1|1,mid+1,r
 typedef long long LL;
 vector<int> t[maxn];
 vector<int> lop,que;
 int fa[maxn], vis[maxn], id[maxn], col[maxn];
 int bfn[maxn], lc[maxn], rc[maxn];
-LL sum[maxn<<1];
 int n,m,flag,qid,num;
 
 void dfs(int x, int f){
@@ -31,6 +28,7 @@ void flood_fill(){
 	memset(vis,0,sizeof(vis));
 	memset(lc, 0, sizeof(lc));
 	memset(rc, 0, sizeof(rc));
+	memset(id, 0, sizeof(id));
 	num=0;
 	for (int x:lop){
 		id[x]=num++;
@@ -59,8 +57,7 @@ struct bit{
 	void add(int x,int z){
 		for (int i=x;i<=num;i+=(i&-i)) b[i]+=z;
 	}
-	LL ask(int x)
-	{
+	LL ask(int x){
 		LL tmp=0;
 		for (int i=x;i;i-=(i&-i)) tmp+=b[i];
 		return tmp;
@@ -82,7 +79,6 @@ LL ask(int x,int y){
 		   -(T.ask(y)-T.ask(x-1));
 	return tmp;
 }
-
 
 void modify(int x, int k, int z){
 	if (col[x]==qid && z>0) return ;
@@ -134,10 +130,9 @@ int main()
 		dfs(1,0);
 		flood_fill();
 		//for (int i=1;i<=n;i++) cout<<bfn[i]<<' '; cout<<endl;
-		memset(sum, 0, sizeof(sum));
 		memset(col, 0, sizeof(col));
 		scanf("%d",&m);
-		char sign[12];
+		char sign[20];
 		S.init(n+1);
 		T.init(n+1);
 		for (qid=1;qid<=m;qid++){
@@ -159,9 +154,9 @@ int main()
 					modify(x, y, z);
 					if (y>=1){
 						modify(fa[x], y-1, z);
-						modify(x, 0, -z);
 					}
 					if (y>=2){
+						modify(x, 0, -z);
 						modify(pre(fa[x]), y-2, z);
 						modify(nxt(fa[x]), y-2, z);
 					}
@@ -170,12 +165,12 @@ int main()
 					modify(x, y, z);
 					if (y>=1){
 						modify(fa[x], y-1, z);
-						modify(x, 0, -z);
 					}
-					if (y>=2)
+					if (y>=2){
+						modify(x, 0, -z);
 						modify(fa[fa[x]], y-2, z);
-				}	
-
+					}
+				}
 			}
 			else{
 				LL ans=0;
@@ -195,9 +190,9 @@ int main()
 					ans+=query(x, y, 1);
 					if (y>=1){
 						ans+=query(fa[x], y-1, 1);
-						ans+=query(x, 0, -1);
 					}
 					if (y>=2){
+						ans+=query(x, 0, -1);
 						ans+=query(pre(fa[x]), y-2, 1);
 						ans+=query(nxt(fa[x]), y-2, 1);
 					}
@@ -206,9 +201,9 @@ int main()
 					ans+=query(x, y, 1);
 					if (y>=1){
 						ans+=query(fa[x], y-1, 1);
-						ans+=query(x, 0, -1);
 					}
 					if (y>=2){
+						ans+=query(x, 0, -1);
 						ans+=query(fa[fa[x]], y-2, 1);
 					}
 				}
